@@ -1,0 +1,50 @@
+.header {
+    width: 100%;
+    height: 100px;
+    margin: 20px 0;
+    .navBar {
+        margin-top: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+
+        img {
+            width: 100%;
+        }
+
+        .navSide {
+            width: 50%;
+
+            .navWrap {
+                display: flex;
+                justify-content: space-around;
+                flex-direction: row;
+
+                .navItem {
+                    list-style: none;
+                    padding: 10px 0;
+                    position: relative;
+                    &:hover{
+                        &::before{
+                            width: 100%;
+                        }
+                    }
+                    &::before{
+                        transition: all .5s;
+                        width: 0;
+                        height: 1px;
+                        background-color: #fff;
+                        content: '';
+                        position: absolute;
+                        bottom: 0;
+                    }
+                    .navLink {
+                        text-transform: uppercase;
+                        text-decoration: none;
+                    }
+                }
+
+            }
+        }
+    }
+}

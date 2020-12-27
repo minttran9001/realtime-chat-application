@@ -1,0 +1,13 @@
+.buttonGold{
+    border:none;
+    outline: none;
+    font-size: 17px;
+    cursor: pointer;
+    color: #D88447;
+    transition: all 1s;
+    float: right;
+    padding: 10px;
+    &:hover{
+        color: #fff;
+    }
+}
