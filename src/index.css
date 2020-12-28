@@ -17,7 +17,7 @@ body{
     overflow-x: hidden;
     overflow-y: hidden;
 }
-p,span{
+input,p,span{
     font-family: 'Cormorant Garamond', serif;
     font-size: 13px;
     letter-spacing: .5px;
@@ -30,3 +30,10 @@ div{
 button{
     cursor: pointer;
 }
+:root {
+    --gold-color: #D88447;
+    --lightblue-color:    #0e1731;
+    --darkblue-color :#06080F;
+    --online-color :#2a8f4c;
+    --offline-color:#232346;
+  }

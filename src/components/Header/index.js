@@ -1,10 +1,15 @@
 import React from "react";
 import "./style.scss";
-import { NavLink } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { isLoggedInUser } from "../../actions";
+import { isLoggedInUser, logout } from "../../actions";
 export default function Header() {
   const auth = useSelector(state=>state.auth)
+  const dispatch = useDispatch()
+
+  const handleLogout = ()=>{
+      dispatch(logout(auth.uid))
+  }
   return (
     <div className="header">
       <div className="navBar">
@@ -45,9 +50,9 @@ export default function Header() {
               </NavLink>
           </li>
           <li className="navItem">
-            <NavLink to="/logout" className="navLink">
+            <Link to="#" onClick={handleLogout} className="navLink">
               LOG OUT
-            </NavLink>
+            </Link>
           </li>
         </ul>
           }

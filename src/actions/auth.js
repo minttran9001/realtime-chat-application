@@ -18,11 +18,13 @@ export const signUp = (user) => {
           })
           .then(() => {
             db.collection("users")
-              .add({
+              .doc(data.user.uid)
+              .set({
                 firstName: user.firstName,
                 lastName: user.lastName,
                 createdAt: new Date(),
                 uid: data.user.uid,
+                isOnline: true,
               })
               .then(() => {
                 const loggedUser = {
@@ -50,7 +52,12 @@ export const signUp = (user) => {
               });
           });
       })
-      .catch((err) => {});
+      .catch((error) => {
+        dispatch({
+          type: `${authConstants.USER_LOGIN}_FAILURE`,
+          payload: { error: error.message },
+        });
+      });
   };
 };
 
@@ -59,59 +66,98 @@ export const signIn = (user) => {
     dispatch({
       type: `${authConstants.USER_LOGIN}_REQUEST`,
     });
+    const db = firebase.firestore()
     firebase
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
       .then((data) => {
-        var name = data.user.displayName;
-        name = name.split(" ");
-        var stringArray = new Array();
-        for (var i = 0; i < name.length; i++) {
-          stringArray.push(name[i]);
-        }
-        const firstName = name[0];
-        const lastName = name[1];
-        const loggedUser = {
-          firstName,
-          lastName,
-          uid: data.user.uid,
-          email: data.user.email,
-        };
-        localStorage.setItem(
-          "user",
-          JSON.stringify({
-            user : loggedUser,
+        db.collection("users")
+          .doc(data.user.uid)
+          .update({
+            isOnline : true
           })
-        );
-        dispatch({
-          type: `${authConstants.USER_LOGIN}_SUCCESS`,
-          payload: { user: loggedUser },
-        });
+          .then(() => {
+            var name = data.user.displayName;
+            name = name.split(" ");
+            var stringArray = new Array();
+            for (var i = 0; i < name.length; i++) {
+              stringArray.push(name[i]);
+            }
+            const firstName = name[0];
+            const lastName = name[1];
+            const loggedUser = {
+              firstName,
+              lastName,
+              uid: data.user.uid,
+              email: data.user.email,
+            };
+            localStorage.setItem(
+              "user",
+              JSON.stringify({
+                user: loggedUser,
+              })
+            );
+            dispatch({
+              type: `${authConstants.USER_LOGIN}_SUCCESS`,
+              payload: { user: loggedUser },
+            });
+          });
       })
+      .catch((err) => {
+        console.log(err);
+      })
+
       .catch((error) => {
         dispatch({
           type: `${authConstants.USER_LOGIN}_FAILURE`,
-          payload: { error },
+          payload: { error: error.message },
         });
       });
   };
 };
 
-export const isLoggedInUser = ()=>{
-  return async dispatch =>{
-    const user = localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : null;
-    if(user)
-    {
+export const isLoggedInUser = () => {
+  return async (dispatch) => {
+    const user = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+    if (user) {
       dispatch({
-        type:`${authConstants.USER_LOGIN}_SUCCESS`,
-        payload:{user : user.user},
-      })
-    }
-    else{
+        type: `${authConstants.USER_LOGIN}_SUCCESS`,
+        payload: { user: user.user },
+      });
+    } else {
       dispatch({
-        type:`${authConstants.USER_LOGIN}_FAILURE`,
-        payload:{error:'Login again please !'}
-      })
+        type: `${authConstants.USER_LOGIN}_FAILURE`,
+        payload: { error: "" },
+      });
     }
-  }
-}
+  };
+};
+
+export const logout = (uid) => {
+  return async (dispatch) => {
+    dispatch({ type: `${authConstants.USER_LOGOUT}_REQUEST` });
+    const db = firebase.firestore();
+    db.collection("users")
+      .doc(uid)
+      .update({
+        isOnline: false,
+      })
+      .then(() => {
+        firebase
+          .auth()
+          .signOut()
+          .then(() => {
+            localStorage.clear();
+            dispatch({ type: `${authConstants.USER_LOGOUT}_SUCCESS` });
+          })
+          .catch((err) => {
+            dispatch({
+              type: `${authConstants.USER_LOGOUT}_FAILURE`,
+              payload: { error: err },
+            });
+          });
+      });
+  };
+};

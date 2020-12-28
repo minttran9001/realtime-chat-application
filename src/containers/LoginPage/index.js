@@ -4,6 +4,7 @@ import Input from "../../components/Layout/UI/Input/index";
 import Card from "../../components/Layout/UI/Card/index";
 import Button from "../../components/Layout/UI/Button/index";
 import Title from "../../components/Layout/UI/Title/index";
+import Error from '../../components/Layout/UI/Error/index'
 import "./style.scss";
 import { signIn } from "../../actions/auth";
 import { useDispatch, useSelector } from "react-redux";
@@ -39,6 +40,9 @@ const Login = () => {
               placeholder=""
               onChange={(value) => setForm({ ...form, password: value })}
             />
+            {
+              auth.error ? <Error>{auth.error}</Error>: <></>
+            }
             <Button type="submit">LOG IN</Button>
           </form>
         </Card>

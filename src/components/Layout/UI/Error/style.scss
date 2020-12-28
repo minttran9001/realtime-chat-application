@@ -1,0 +1,16 @@
+.error {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    p {
+        flex: .9;
+        font-size: 15px;
+        color: #F02849;
+    }
+
+    .icon {
+        flex:.1 ;
+        font-size: 15px;
+        color: #F02849;
+    }
+}
