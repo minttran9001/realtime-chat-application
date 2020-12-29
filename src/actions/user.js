@@ -25,14 +25,13 @@ export const getRealTimeUser = (uid) => {
 };
 export const updateMessage = (msgObj) => {
   return async (dispatch) => {
-    debugger;
     dispatch({ type: `${userConstants.UPDATE_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
     db.collection("conversations")
       .add({
         ...msgObj,
         isView: false,
-        createAt: new Date(),
+        createdAt: new Date(),
       })
       .then((data) => {
         dispatch({ type: `${userConstants.UPDATE_MESSAGE}_SUCCESS` });
@@ -45,14 +44,59 @@ export const updateMessage = (msgObj) => {
       });
   };
 };
+export const setSeenMessage = ({ uid_1, uid_2 }) => {
+  return async (dispatch) => {
+    dispatch({ type: `${userConstants.SET_SEEN_MESSAGE}_REQUEST` });
+    const db = firebase.firestore();
+    db.collection("conversations")
+      .where("user_uid_1", "==", uid_2)
+      .where("user_uid_2", "==", uid_1)
+      .orderBy("createdAt", "desc")
+      .onSnapshot((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          doc.ref.update({
+            isView: true,
+          });
+        });
+      });
+  };
+};
+export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
+  return async (dispatch) => {
+    dispatch({ type: `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST` });
+    const db = firebase.firestore();
 
+    const ref = db
+      .collection("conversations")
+      .orderBy("createdAt", "asc")
+      .where("user_uid_1", "in", [uid_2, uid_1])
+      .startAfter(lastestDoc || 0)
+      .limit(10);
+    const data = await ref.get();
+    lastestDoc = data.docs[data.docs.length - 1];
+    const conversations = [];
+    data.forEach((doc) => {
+      conversations.push(doc.data());
+    });
+    dispatch({
+      type: `${userConstants.GET_LOADMORE_MESSAGE}_SUCCESS`,
+      payload: { conversations, lastestDoc },
+    });
+    console.log(conversations);
+  };
+};
 export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-    
-  
+    // const ref = db
+    //   .collection("conversations")
+    //   .orderBy("createdAt", "asc")
+    //   .where("user_uid_1", "in", [uid_2, uid_1])
+    // const data = await ref.get();
+    // const lastestDoc = data.docs[data.docs.length - 1];
     db.collection("conversations")
+      .orderBy("createdAt", "asc")
       .where("user_uid_1", "in", [uid_2, uid_1])
       .onSnapshot((querySnapshot) => {
         const conversations = [];
@@ -64,11 +108,10 @@ export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
           ) {
             conversations.push(doc.data());
           }
-          
         });
         dispatch({
           type: `${userConstants.GET_REALTIME_MESSAGE}_SUCCESS`,
-          payload : {conversations},
+          payload: { conversations },
         });
       });
   };

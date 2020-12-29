@@ -104,15 +104,11 @@ export const signIn = (user) => {
           });
       })
       .catch((err) => {
-        console.log(err);
-      })
-
-      .catch((error) => {
         dispatch({
           type: `${authConstants.USER_LOGIN}_FAILURE`,
-          payload: { error: error.message },
+          payload: { error: err.message },
         });
-      });
+      })
   };
 };
 

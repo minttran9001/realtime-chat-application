@@ -18,7 +18,7 @@ export default (state=initialState,action)=>{
                 ...state,
                 authenticating:true,
             }
-            break;
+            return state
         case `${authConstants.USER_LOGIN}_SUCCESS`:
             debugger
             state = {
@@ -31,7 +31,8 @@ export default (state=initialState,action)=>{
                 authenticating:false,
                 error:null,
             }
-            break;
+            return state
+
         case `${authConstants.USER_LOGIN}_FAILURE`:
             state = {
                 ...state,
@@ -39,25 +40,26 @@ export default (state=initialState,action)=>{
                 authenticating:false,
                 error:action.payload.error
             }
-            break;
+            return state
+
         case `${authConstants.USER_LOGOUT}_REQUEST`:
-            break;
+            return state
+
         case `${authConstants.USER_LOGOUT}_SUCCESS`:
             state={
                 ...initialState,
 
             }
-            break;
+            return state
+
         case `${authConstants.USER_LOGOUT}_FAILURE`:
             state={
                 ...state,
                 error:action.payload.error
             }
-            break;
-        default:
-            state = {...state};
-            break;
-    }
-    return state;
+            return state
 
+        default:
+            return state
+    }
 }
