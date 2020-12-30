@@ -16,7 +16,7 @@ export default function Header() {
         <div className="navSide">
           <ul className="navWrap">
             <li className="navItem">
-              <NavLink to="/" className="navLink">
+              <NavLink to="/realtime-chat-application" className="navLink">
                 HOME
               </NavLink>
             </li>

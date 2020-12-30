@@ -18,7 +18,7 @@ function App() {
     }
   },[])
   const routes = [
-    { path: "/", name: "Home", component: Home },
+    { path: "/realtime-chat-application", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Sign Up", component: SignUp },
   ];
