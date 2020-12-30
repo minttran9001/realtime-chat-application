@@ -65,38 +65,48 @@ export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-
+   
     const ref = db
       .collection("conversations")
-      .orderBy("createdAt", "asc")
+      .orderBy("createdAt", "desc")
       .where("user_uid_1", "in", [uid_2, uid_1])
       .startAfter(lastestDoc || 0)
       .limit(10);
     const data = await ref.get();
     lastestDoc = data.docs[data.docs.length - 1];
     const conversations = [];
-    data.forEach((doc) => {
+    data.docs.forEach((doc) => {
       conversations.push(doc.data());
     });
-    dispatch({
-      type: `${userConstants.GET_LOADMORE_MESSAGE}_SUCCESS`,
-      payload: { conversations, lastestDoc },
-    });
-    console.log(conversations);
+    debugger
+    console.log(conversations)
+    if (conversations !== []) {
+      dispatch({
+        type: `${userConstants.GET_LOADMORE_MESSAGE}_SUCCESS`,
+        payload: { conversations:conversations.reverse(), lastestDoc },
+      });
+    } else {
+      dispatch({
+        type: `${userConstants.GET_LOADMORE_MESSAGE}_FAILURE`,
+        payload: { error: "END" },
+      });
+    }
   };
 };
 export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-    // const ref = db
-    //   .collection("conversations")
-    //   .orderBy("createdAt", "asc")
-    //   .where("user_uid_1", "in", [uid_2, uid_1])
-    // const data = await ref.get();
-    // const lastestDoc = data.docs[data.docs.length - 1];
+    const ref = db
+      .collection("conversations")
+      .orderBy("createdAt", "desc")
+      .limit(10)
+      .where("user_uid_1", "in", [uid_2, uid_1]);
+    const data = await ref.get();
+    const lastestDoc = data.docs[data.docs.length - 1];
     db.collection("conversations")
-      .orderBy("createdAt", "asc")
+      .orderBy("createdAt", "desc")
+      .limit(10)
       .where("user_uid_1", "in", [uid_2, uid_1])
       .onSnapshot((querySnapshot) => {
         const conversations = [];
@@ -111,7 +121,7 @@ export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
         });
         dispatch({
           type: `${userConstants.GET_REALTIME_MESSAGE}_SUCCESS`,
-          payload: { conversations },
+          payload: { conversations, lastestDoc },
         });
       });
   };

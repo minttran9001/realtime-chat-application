@@ -20,6 +20,7 @@ import { BsCameraVideo } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  getLoadMoreConversations,
   getRealTimeConversations,
   getRealTimeUser,
   setSeenMessage,
@@ -32,7 +33,7 @@ const Home = () => {
   const [message, setMessage] = useState("");
   const dispatch = useDispatch();
 
-  const { users, conversations, loadingUser, loadingChat } = useSelector(
+  const { users, conversations, loadingUser, loadingChat ,lastestDoc} = useSelector(
     (state) => state.user
   );
   const auth = useSelector((state) => state.auth);
@@ -74,12 +75,13 @@ const Home = () => {
     }
   };
   const handleScroll = ()=>{
-    var body = document.body; //IE 'quirks'
-    var document = document.documentElement; //IE with doctype
-    document = (document.clientHeight) ? document : body;
+    let body = document.body;
+    let chatArea = document.querySelector('.chatArea')
+    chatArea = (chatArea.clientHeight) ? chatArea : body;
 
-    if (document.scrollTop == 0) {
-        alert("top");
+    if (chatArea.scrollTop == 0) {
+      const users = { uid_1: auth.uid, uid_2: userSelected.uid,lastestDoc };
+      dispatch(getLoadMoreConversations(users))
     }        
   }
   const handleSeen = (e) => {
@@ -143,7 +145,7 @@ const Home = () => {
               </div>
             </div>
             {!loadingChat ? (
-              <div className="chatArea">
+              <div onScroll={handleScroll} className="chatArea">
                 <div className='chatAreaWrap'>
               {conversations.map((item, index) => (
                   <div
@@ -192,7 +194,7 @@ const Home = () => {
               </div>
               <div className="likeButton">
                 {message === "" ? (
-                  <AiOutlineHeart className="icon" />
+                  <AiOutlineHeart  className="icon" />
                 ) : (
                   <AiOutlineSend onClick={submitMessage} className="icon" />
                 )}
