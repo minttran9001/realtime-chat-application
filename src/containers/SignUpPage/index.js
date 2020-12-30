@@ -22,7 +22,7 @@ export default function SignUp() {
     dispatch(signUp(form));
   };
   if (auth.authenticated === true) {
-    return <Redirect to="/" />;
+    return <Redirect to="/realtime-chat-application" />;
   } else {
     return (
       <Layout>

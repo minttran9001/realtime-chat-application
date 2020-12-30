@@ -21,7 +21,7 @@ const Login = () => {
     dispatch(signIn(form));
   };
   if (auth.authenticated === true) {
-    return <Redirect to="/" />;
+    return <Redirect to="/realtime-chat-application" />;
   } else {
     return (
       <Layout>
