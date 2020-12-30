@@ -253,11 +253,12 @@
             height: 100%;
 
             .chatAreaWrap {
-                padding: 10px 30px;
                 display: flex;
+                min-height: 100%;
                 flex-direction: column;
                 align-content: flex-end;
                 justify-content: flex-end;
+                padding: 10px 30px;
             }
 
             .chatWrapper {
@@ -276,11 +277,12 @@
                         height: 40px;
                         border-radius: 50%;
                     }
+
                     p {
                         font-size: 15px;
                         padding: 10px 20px;
                         border-radius: 20px;
-                        border:1px solid var(--lightblue-color);
+                        border: 1px solid var(--lightblue-color);
                         word-wrap: break-word;
                     }
 
@@ -294,6 +296,7 @@
                     img {
                         display: none;
                     }
+
                     p {
                         font-size: 15px;
                         padding: 10px 20px;
@@ -312,7 +315,7 @@
                     margin-left: 7px;
                 }
 
-                
+
             }
 
         }
@@ -327,24 +330,77 @@
                 flex: 0.3;
                 display: flex;
                 align-items: center;
+                position: relative;
                 justify-content: center;
-
-                .icon {
-                    margin-right: 10px;
+                
+                .fileSend {
+                    opacity: 0;
+                    background-color: var(--lightblue-color);
+                    position: absolute;
+                    bottom: 40px;
+                    border-radius: 10px;
                     display: flex;
                     align-items: center;
-                    transition: all .5s;
-                    padding: 10px;
-                    border-radius: 50%;
                     justify-content: center;
-                    cursor: pointer;
-                    font-size: 20px;
+                    padding: 10px;
+                    &.hasFile{
+                        opacity: 1;
+                    }
+                    &:hover{
+                        .before{
+                            opacity: 1;
+                        }
+                    }
+                    .before{
+                        transition: all .5s;
+                        opacity: 0;
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        background-color: rgba($color: #000000, $alpha: 0.5);
+                    }
+                    .icon{
+                        cursor: pointer;
+                        font-size: 40px;
+                        position: absolute;
+                        background-color: transparent;
+                        
+                    }
+                    #messageImg {
+                      
 
-                    &:hover {
-                        background-color: #0e1731;
+                        width: 150px;
 
                     }
                 }
+
+                .actionWrap {
+                    position: relative;
+
+                    .fileInput {
+                        visibility: hidden;
+                        left: 0;
+                        position: absolute;
+                    }
+
+                    .icon {
+                        margin-right: 10px;
+                        display: flex;
+                        align-items: center;
+                        transition: all .5s;
+                        padding: 10px;
+                        border-radius: 50%;
+                        justify-content: center;
+                        cursor: pointer;
+                        font-size: 20px;
+
+                        &:hover {
+                            background-color: #0e1731;
+
+                        }
+                    }
+                }
+
 
 
             }
@@ -357,14 +413,16 @@
 
                 form {
                     width: 95%;
+                    position: relative;
+                    width: 100%;
+                    padding: 10px;
+                    border-radius: 10px;
+                    background-color: #0e1731;
                 }
 
                 input {
                     border: none;
                     width: 100%;
-                    padding: 10px;
-                    border-radius: 10px;
-                    background-color: #0e1731;
                     outline: none;
                 }
 

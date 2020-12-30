@@ -30,6 +30,7 @@ export const updateMessage = (msgObj) => {
     db.collection("conversations")
       .add({
         ...msgObj,
+        type:'text',
         isView: false,
         createdAt: new Date(),
       })
@@ -65,7 +66,7 @@ export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-   
+
     const ref = db
       .collection("conversations")
       .orderBy("createdAt", "desc")
@@ -78,12 +79,10 @@ export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
     data.docs.forEach((doc) => {
       conversations.push(doc.data());
     });
-    debugger
-    console.log(conversations)
     if (conversations !== []) {
       dispatch({
         type: `${userConstants.GET_LOADMORE_MESSAGE}_SUCCESS`,
-        payload: { conversations:conversations.reverse(), lastestDoc },
+        payload: { conversations: conversations.reverse(), lastestDoc },
       });
     } else {
       dispatch({
@@ -93,21 +92,19 @@ export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
     }
   };
 };
-export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
+export const getRealTimeConversations = ({ uid_1, uid_2, type }) => {
   return async (dispatch) => {
-    dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
+      dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
     const ref = db
       .collection("conversations")
       .orderBy("createdAt", "desc")
-      .limit(10)
       .where("user_uid_1", "in", [uid_2, uid_1]);
     const data = await ref.get();
     const lastestDoc = data.docs[data.docs.length - 1];
     db.collection("conversations")
       .orderBy("createdAt", "desc")
-      .limit(10)
-      .where("user_uid_1", "in", [uid_2, uid_1])
+      .where("user_uid_1","in",[uid_1,uid_2])
       .onSnapshot((querySnapshot) => {
         const conversations = [];
         querySnapshot.forEach((doc) => {
@@ -121,7 +118,7 @@ export const getRealTimeConversations = ({ uid_1, uid_2 }) => {
         });
         dispatch({
           type: `${userConstants.GET_REALTIME_MESSAGE}_SUCCESS`,
-          payload: { conversations, lastestDoc },
+          payload: { conversations: conversations.reverse(), lastestDoc },
         });
       });
   };

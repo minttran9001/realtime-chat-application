@@ -31,11 +31,16 @@ const Home = () => {
   const [isSelected, setIsSelected] = useState("");
   const [userSelected, setUserSelected] = useState("");
   const [message, setMessage] = useState("");
+  const [messageImg, setMessageImg] = useState("");
   const dispatch = useDispatch();
 
-  const { users, conversations, loadingUser, loadingChat ,lastestDoc} = useSelector(
-    (state) => state.user
-  );
+  const {
+    users,
+    conversations,
+    loadingUser,
+    loadingChat,
+    lastestDoc,
+  } = useSelector((state) => state.user);
   const auth = useSelector((state) => state.auth);
 
   const viewUser = () => {
@@ -59,9 +64,26 @@ const Home = () => {
   };
   const initChat = (user) => {
     const users = { uid_1: auth.uid, uid_2: user.uid };
-    dispatch(getRealTimeConversations(users));
     setUserSelected(user);
+    dispatch(getRealTimeConversations(users));
   };
+  useEffect(() => {
+    if (userSelected != "") {
+      dispatch(
+        getRealTimeConversations({
+          uid_1: auth.uid,
+          uid_2: userSelected.uid,
+          type: "afterSend",
+        })
+      );
+    }
+  }, [userSelected]);
+  useEffect(() => {
+    if (userSelected != "" && !loadingChat) {
+      let chatArea = document.getElementById("chatArea");
+      chatArea.scrollTop = chatArea.scrollHeight;
+    }
+  }, [conversations]);
   const submitMessage = (e) => {
     e.preventDefault();
     const msgObj = {
@@ -71,22 +93,50 @@ const Home = () => {
     };
     if (message !== "") {
       dispatch(updateMessage(msgObj));
+      dispatch(
+        getRealTimeConversations({
+          uid_1: auth.uid,
+          uid_2: userSelected.uid,
+          type: "afterSend",
+        })
+      );
+
+      // let chatArea = document.getElementById("chatArea");
+      // chatArea.scrollTop = chatArea.scrollHeight;
+
       setMessage("");
     }
   };
-  const handleScroll = ()=>{
+  const handleScroll = () => {
     let body = document.body;
-    let chatArea = document.querySelector('.chatArea')
-    chatArea = (chatArea.clientHeight) ? chatArea : body;
+    let chatArea = document.querySelector(".chatArea");
+    chatArea = chatArea.clientHeight ? chatArea : body;
 
     if (chatArea.scrollTop == 0) {
-      const users = { uid_1: auth.uid, uid_2: userSelected.uid,lastestDoc };
-      dispatch(getLoadMoreConversations(users))
-    }        
-  }
+      // const users = { uid_1: auth.uid, uid_2: userSelected.uid,lastestDoc };
+      // dispatch(getLoadMoreConversations(users))
+      // console.log(users)
+    }
+  };
   const handleSeen = (e) => {
     dispatch(setSeenMessage({ uid_1: auth.uid, uid_2: userSelected.uid }));
   };
+  const img = document.getElementById("fileInput");
+  const messImgElement = document.getElementById("messageImg");
+  const openFile = (e) => {
+    img.click();
+    setMessageImg("advanced");
+  };
+  const viewFile = (e) => {
+    const fileSend = document.querySelector(".fileSend");
+    fileSend.classList.add("hasFile");
+    messImgElement.src = URL.createObjectURL(img.files[0]);
+  };
+  useEffect(() => {
+    if (messageImg != "") {
+      img.addEventListener("change", viewFile);
+    }
+  }, [messageImg]);
   return (
     <Layout>
       <div className="homePage">
@@ -108,7 +158,9 @@ const Home = () => {
                   ></span>
                 </div>
                 <div className="friendState">
-                  <p className="friendName">{item.firstName + item.lastName}</p>
+                  <p className="friendName">
+                    {item.firstName + " " + item.lastName}
+                  </p>
                   <div className="friendLastText">
                     <p className="lastText">See you again </p>
                     <span></span>
@@ -145,27 +197,32 @@ const Home = () => {
               </div>
             </div>
             {!loadingChat ? (
-              <div onScroll={handleScroll} className="chatArea">
-                <div className='chatAreaWrap'>
-              {conversations.map((item, index) => (
-                  <div
-                    className={
-                      auth.uid == item.user_uid_1
-                        ? "chatWrapper right"
-                        : "chatWrapper left"
-                    }
-                  >
-                    {auth.uid !== item.user_uid_1 ? <img src={Mint} /> : <></>}
-                    <p key={index}>{item.message}</p>
-                    <AiOutlineCheckCircle
+              <div onScroll={handleScroll} id="chatArea" className="chatArea">
+                <div className="chatAreaWrap">
+                  {conversations.map((item, index) => (
+                    <div
+                      key={index}
                       className={
-                        auth.uid == item.user_uid_1 && !item.isView
-                          ? "icon"
-                          : "icon gone"
+                        auth.uid == item.user_uid_1
+                          ? "chatWrapper right"
+                          : "chatWrapper left"
                       }
-                    />
-                  </div>
-                ))}
+                    >
+                      {auth.uid !== item.user_uid_1 ? (
+                        <img src={Mint} />
+                      ) : (
+                        <></>
+                      )}
+                      <p key={index}>{item.message}</p>
+                      <AiOutlineCheckCircle
+                        className={
+                          auth.uid == item.user_uid_1 && !item.isView
+                            ? "icon"
+                            : "icon gone"
+                        }
+                      />
+                    </div>
+                  ))}
                 </div>
               </div>
             ) : (
@@ -175,10 +232,28 @@ const Home = () => {
             )}
             <div className="typeArea">
               <div className="action">
-                <AiOutlinePlusCircle className="icon" />
-                <AiOutlinePicture className="icon" />
-                <MdTagFaces className="icon" />
-                <AiOutlineFileGif className="icon" />
+                <div className="fileSend">
+                  <img id="messageImg" />
+
+                  <div className="before"></div>
+                  <AiOutlineSend className="icon" />
+                </div>
+                <div className="actionWrap">
+                  <input type="file" className="fileInput" />
+                  <AiOutlinePlusCircle className="icon" />
+                </div>
+                <div className="actionWrap">
+                  <input type="file" id="fileInput" className="fileInput" />
+                  <AiOutlinePicture onClick={openFile} className="icon" />
+                </div>
+                <div className="actionWrap">
+                  <input type="file" className="fileInput" />
+                  <MdTagFaces className="icon" />
+                </div>
+                <div className="actionWrap">
+                  <input type="file" className="fileInput" />
+                  <AiOutlineFileGif className="icon" />
+                </div>
               </div>
               <div className="input">
                 <form onSubmit={submitMessage}>
@@ -194,7 +269,7 @@ const Home = () => {
               </div>
               <div className="likeButton">
                 {message === "" ? (
-                  <AiOutlineHeart  className="icon" />
+                  <AiOutlineHeart className="icon" />
                 ) : (
                   <AiOutlineSend onClick={submitMessage} className="icon" />
                 )}

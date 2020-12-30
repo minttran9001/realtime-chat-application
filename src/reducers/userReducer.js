@@ -32,8 +32,8 @@ export default (state = initialState, action) => {
       state = {
         ...state,
         loadingChat: false,
-        conversations: action.payload.conversations.reverse(),
-        lastestDoc: action.payload.lastestDoc,
+        conversations: action.payload.conversations,
+        lastestDoc : action.payload.lastDoc,
       };
       return state;
     case `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST`:
@@ -43,7 +43,6 @@ export default (state = initialState, action) => {
       };
       return state;
     case `${userConstants.GET_LOADMORE_MESSAGE}_SUCCESS`:
-      debugger;
       state = {
         ...state,
         loadingChat: false,
@@ -55,7 +54,6 @@ export default (state = initialState, action) => {
       };
       return state;
     case `${userConstants.GET_LOADMORE_MESSAGE}_FAILURE`:
-      debugger;
       state = {
         ...state,
       };
