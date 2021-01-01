@@ -236,7 +236,10 @@ const Home = () => {
                         <></>
                       )}
                       {item.type !== "file" ? (
-                        <p key={index}>{item.message}</p>
+                        <div className='messageWrap'>
+                          <p key={index}>{item.message}</p>
+                        </div>
+
                       ) : (
                         <img
                           className="messageFile"
