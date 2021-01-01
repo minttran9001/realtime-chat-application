@@ -84,6 +84,44 @@ const Home = () => {
       chatArea.scrollTop = chatArea.scrollHeight;
     }
   }, [conversations]);
+  useEffect(() => {
+    if (messageImg != "") {
+      img.addEventListener("change", viewFile);
+    }
+  }, [messageImg]);
+
+  const img = document.getElementById("fileInput");
+  const messImgElement = document.getElementById("messageImg");
+  const openFile = (e) => {
+    img.click();
+    setMessageImg("advanced");
+  };
+  const viewFile = (e) => {
+    const fileSend = document.querySelector(".fileSend");
+    fileSend.classList.add("hasFile");
+    messImgElement.src = URL.createObjectURL(img.files[0]);
+  };
+
+  const submitMessageFile = (e) => {
+    e.preventDefault();
+    const msgObj = {
+      user_uid_1: auth.uid,
+      user_uid_2: userSelected.uid,
+      file: img.files[0],
+    };
+
+    dispatch(updateMessage({ msgObj: msgObj, type: "file" }));
+    const fileSend = document.querySelector(".fileSend");
+    fileSend.classList.remove("hasFile");
+    messImgElement.src = "";
+    dispatch(
+      getRealTimeConversations({
+        uid_1: auth.uid,
+        uid_2: userSelected.uid,
+        type: "afterSend",
+      })
+    );
+  };
   const submitMessage = (e) => {
     e.preventDefault();
     const msgObj = {
@@ -92,7 +130,7 @@ const Home = () => {
       message,
     };
     if (message !== "") {
-      dispatch(updateMessage(msgObj));
+      dispatch(updateMessage({ msgObj: msgObj }));
       dispatch(
         getRealTimeConversations({
           uid_1: auth.uid,
@@ -121,22 +159,6 @@ const Home = () => {
   const handleSeen = (e) => {
     dispatch(setSeenMessage({ uid_1: auth.uid, uid_2: userSelected.uid }));
   };
-  const img = document.getElementById("fileInput");
-  const messImgElement = document.getElementById("messageImg");
-  const openFile = (e) => {
-    img.click();
-    setMessageImg("advanced");
-  };
-  const viewFile = (e) => {
-    const fileSend = document.querySelector(".fileSend");
-    fileSend.classList.add("hasFile");
-    messImgElement.src = URL.createObjectURL(img.files[0]);
-  };
-  useEffect(() => {
-    if (messageImg != "") {
-      img.addEventListener("change", viewFile);
-    }
-  }, [messageImg]);
   return (
     <Layout>
       <div className="homePage">
@@ -209,11 +231,19 @@ const Home = () => {
                       }
                     >
                       {auth.uid !== item.user_uid_1 ? (
-                        <img src={Mint} />
+                        <img className="avatar" src={Mint} />
                       ) : (
                         <></>
                       )}
-                      <p key={index}>{item.message}</p>
+                      {item.type !== "file" ? (
+                        <p key={index}>{item.message}</p>
+                      ) : (
+                        <img
+                          className="messageFile"
+                          src={item.file}
+                          key={index}
+                        />
+                      )}
                       <AiOutlineCheckCircle
                         className={
                           auth.uid == item.user_uid_1 && !item.isView
@@ -236,7 +266,7 @@ const Home = () => {
                   <img id="messageImg" />
 
                   <div className="before"></div>
-                  <AiOutlineSend className="icon" />
+                  <AiOutlineSend onClick={submitMessageFile} className="icon" />
                 </div>
                 <div className="actionWrap">
                   <input type="file" className="fileInput" />

@@ -4,6 +4,7 @@ import { BrowserRouter as Router, Route } from "react-router-dom";
 import SignUp from "./containers/SignUpPage/index";
 import Login from "./containers/LoginPage/index";
 import Home from "./containers/HomePage/index";
+import Profile from './containers/ProfilePage/index'
 import PrivateRoute from "./components/Private/index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { isLoggedInUser } from "./actions";
@@ -21,6 +22,7 @@ function App() {
     { path: "/realtime-chat-application", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Sign Up", component: SignUp },
+    { path: "/profile", name: "Profile", component: Profile },
   ];
   return (
     <div className="App">

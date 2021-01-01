@@ -23,26 +23,57 @@ export const getRealTimeUser = (uid) => {
     return unsubscribe;
   };
 };
-export const updateMessage = (msgObj) => {
+export const updateMessage = ({ msgObj, type }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.UPDATE_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-    db.collection("conversations")
-      .add({
-        ...msgObj,
-        type:'text',
-        isView: false,
-        createdAt: new Date(),
-      })
-      .then((data) => {
-        dispatch({ type: `${userConstants.UPDATE_MESSAGE}_SUCCESS` });
-      })
-      .catch((error) => {
-        dispatch({
-          type: `${userConstants.UPDATE_MESSAGE}_REQUEST`,
-          payload: { error: error.message },
+    if (type != "file") {
+      db.collection("conversations")
+        .add({
+          ...msgObj,
+          type: "text",
+          isView: false,
+          createdAt: new Date(),
+        })
+        .then((data) => {
+          dispatch({ type: `${userConstants.UPDATE_MESSAGE}_SUCCESS` });
+        })
+        .catch((error) => {
+          dispatch({
+            type: `${userConstants.UPDATE_MESSAGE}_REQUEST`,
+            payload: { error: error.message },
+          });
+        });
+    } else {
+      const ref = firebase.storage().ref();
+      const name = new Date() + "-" + msgObj.file.name;
+      const metaData = {
+        contentType: msgObj.file.type,
+      };
+      const task = ref.child(name).put(msgObj.file, metaData);
+      task.then((snapshot) => {
+        snapshot.ref.getDownloadURL().then((url) => {
+          db.collection("conversations")
+            .add({
+              user_uid_1: msgObj.user_uid_1,
+              user_uid_2: msgObj.user_uid_2,
+              file: url,
+              type: "file",
+              isView: false,
+              createdAt: new Date(),
+            })
+            .then((data) => {
+              dispatch({ type: `${userConstants.UPDATE_MESSAGE}_SUCCESS` });
+            })
+            .catch((error) => {
+              dispatch({
+                type: `${userConstants.UPDATE_MESSAGE}_REQUEST`,
+                payload: { error: error.message },
+              });
+            });
         });
       });
+    }
   };
 };
 export const setSeenMessage = ({ uid_1, uid_2 }) => {
@@ -94,7 +125,7 @@ export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
 };
 export const getRealTimeConversations = ({ uid_1, uid_2, type }) => {
   return async (dispatch) => {
-      dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
+    dispatch({ type: `${userConstants.GET_REALTIME_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
     const ref = db
       .collection("conversations")
@@ -104,7 +135,7 @@ export const getRealTimeConversations = ({ uid_1, uid_2, type }) => {
     const lastestDoc = data.docs[data.docs.length - 1];
     db.collection("conversations")
       .orderBy("createdAt", "desc")
-      .where("user_uid_1","in",[uid_1,uid_2])
+      .where("user_uid_1", "in", [uid_1, uid_2])
       .onSnapshot((querySnapshot) => {
         const conversations = [];
         querySnapshot.forEach((doc) => {
