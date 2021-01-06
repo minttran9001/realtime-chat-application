@@ -1,0 +1,198 @@
+.modalPost{
+    position: absolute;
+    width: 100%;
+    top: 0;
+    left: 0;
+    z-index: 11;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all .5s;
+    visibility: hidden;
+    background-color: rgba($color: #000000, $alpha: .5);
+    &.open{
+        visibility: visible;
+        opacity: 1;
+    }
+    .modalWrapper{
+        display: flex;
+        padding:10px 20px;
+        flex-direction: column;
+        width: 40%;
+        height: 80%;
+        align-items: flex-start;
+        margin: auto;
+        background-color: var(--darkblue-color);
+        .head{
+            width: 100%;
+            height: 20%;
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--lightblue-color);
+            text-align: center;
+            display: flex;
+            align-items: center;
+            p{
+                font-size: 20px;
+            }
+            .icon{
+                font-size: 25px;
+                cursor: pointer;
+            }
+        }
+        .poster{
+            display: flex;
+            width: 100%;
+            align-items: center;
+            .posterImage{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                width:  90px;
+                margin-right: 20px;
+                img{
+                    
+                    width: 100%;
+                    border-radius: 50%;
+                }
+            }
+            .posterName{
+                display: flex;
+                flex-direction: column;
+                p{
+                    padding: 5px;
+                    font-size: 20px;
+                }
+                .securityMode{
+                    cursor: pointer;
+                    background-color: var(--lightblue-color);
+                    border-radius: 15px;
+                    padding: 5px 10px;
+                    display: flex;
+                    align-items: flex-end;
+                    span{
+                        margin-left: 5px;
+                        font-size: 12px;
+                    }
+                    .icon{
+                        background-color: transparent;
+                    }
+                }
+            }
+           
+        }
+        .statusBox{
+            width: 100%;
+            margin: auto;
+            margin: 20px 0;
+            overflow-y:scroll;
+            overflow-x: hidden;
+            &::-webkit-scrollbar {
+                width: 12px;
+            }
+
+            /* Track */
+            &::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+            }
+
+            /* Handle */
+            &::-webkit-scrollbar-thumb {
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                background: var(--lightblue-color);
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+            }
+
+            &::-webkit-scrollbar-thumb:window-inactive {
+                background: rgba(255, 0, 0, 0.4);
+            }
+            textarea{
+                border:none;
+                height: 100px;
+                padding: 20px;
+                border-radius: 15px;
+                outline: none;
+                margin: auto;
+                width: 90%;
+                background-color: var(--lightblue-color);
+                &::-webkit-scrollbar {
+                    width: 12px;
+                }
+    
+                /* Track */
+                &::-webkit-scrollbar-track {
+                    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                    -webkit-border-radius: 10px;
+                    border-radius: 10px;
+                }
+    
+                /* Handle */
+                &::-webkit-scrollbar-thumb {
+                    -webkit-border-radius: 10px;
+                    border-radius: 10px;
+                    background: var(--lightblue-color);
+                    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+                }
+    
+                &::-webkit-scrollbar-thumb:window-inactive {
+                    background: rgba(255, 0, 0, 0.4);
+                }
+            }
+            
+            .imageBox{
+                display: flex;
+                margin-top: 10px;
+                visibility: hidden;
+                width:100%;
+                align-items: center;
+                justify-content: center;
+                &.hasFile{
+                    visibility: visible;
+                }
+                img{
+                    padding: 10px;
+                    border-radius: 15px;
+                    background-color: var(--lightblue-color);
+                    width: 100%;
+                }
+            }
+        }
+        .postButton{
+            width: 100%;
+            position: relative;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            button{
+                width: 100px;
+                border-radius: 15px;
+                border: 1px solid var(--gold-color);
+            }
+           
+            .postIcon{
+                input{
+                    position: absolute;
+                    right: -140px;
+                    bottom: 10px;
+                    visibility: hidden;
+                }
+                .icon{
+                    cursor: pointer;
+                    margin-right: 20px;
+                    font-size: 25px;
+                    padding: 10px;
+                    transition: all .5s;
+                    border-radius: 50%;
+                    &:hover{
+                        background-color: var(--lightblue-color);
+                    }
+                }
+            }
+        }
+    }
+}

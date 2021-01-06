@@ -69,6 +69,16 @@
             }
         }
     }
+    .postButton{
+        width: 80%;
+        margin:20px auto -50px auto;
+        display: flex;
+        align-items: center;
+        button{
+            border: 1px solid var(--gold-color);
+            border-radius: 15px;
+        }
+    }
     .allPosts{
         display: flex;
         overflow-x: scroll;
@@ -98,6 +108,8 @@
             background: rgba(255, 0, 0, 0.4);
         }
         .post{
+            cursor: pointer;
+            z-index: 10;
             margin-right: 20px;
             padding: 15px;
             background-color: var(--lightblue-color);

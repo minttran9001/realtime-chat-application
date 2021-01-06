@@ -10,3 +10,6 @@ export const userConstants = {
     SET_SEEN_MESSAGE : 'SET_SEEN_MESSAGE',
     GET_LOADMORE_MESSAGE : 'GET_LOADMORE_MESSAGE',
 }
+export const postConstants = {
+    PUSH_POST : 'PUSH_POST'
+}
