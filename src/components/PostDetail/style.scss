@@ -31,15 +31,17 @@
         display: flex;
         background-color: var(--darkblue-color);
 
-        align-items: flex-start;
+        align-items: center;
         justify-content: center;
 
         .postImage {
             display: flex;
+            justify-content: center;
             align-items: center;
-
+            width: 400px;
+            overflow: hidden;
             img {
-                width: 500px;
+                width: 100%;
             }
         }
 
@@ -111,7 +113,7 @@
                 }
                 .commentBox{
                     overflow-y: scroll;
-                    height: 220px;
+                    height: 250px;
                     &::-webkit-scrollbar {
                         width: 12px;
                     }

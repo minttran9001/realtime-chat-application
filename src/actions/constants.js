@@ -11,5 +11,9 @@ export const userConstants = {
     GET_LOADMORE_MESSAGE : 'GET_LOADMORE_MESSAGE',
 }
 export const postConstants = {
-    PUSH_POST : 'PUSH_POST'
+    PUSH_POST : 'PUSH_POST',
+    GET_REALTIME_POSTS : 'GET_REALTIME_POSTS',
+    GET_POST_BY_KEY:'GET_POST_BY_KEY',
+    CLEAR_POST_ITEM :'CLEAR_POST_ITEM',
+    PUSH_COMMENT : 'PUSH_COMMENT'
 }

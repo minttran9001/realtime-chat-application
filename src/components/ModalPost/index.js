@@ -5,38 +5,54 @@ import Mint from "../../images/mint.jpg";
 import { BiLock, BiMap } from "react-icons/bi";
 import Title from "../../components/Layout/UI/Title/index";
 import Button from "../Layout/UI/Button";
+import { useDispatch, useSelector } from "react-redux";
+
+import { pushPost } from "../../actions/post";
 const ModalPost = () => {
+  const dispatch = useDispatch();
+  const auth = useSelector((state) => state.auth);
+
   const [postImage, setPostImage] = React.useState("");
-  const fileInput = document.getElementById("filePost");
-  const postImageElement = document.getElementById("postImageElement");
+
   const closeModalPost = () => {
     document.querySelector(".modalPost").classList.remove("open");
   };
+  const filePost = document.getElementById("filePost");
+  const postImageElement = document.getElementById("postImageElement");
   const openFileInput = () => {
-    fileInput.click();
+    filePost.click();
     setPostImage("advanced");
-
   };
+  const imageBox = document.querySelector(".imageBox");
   const viewFile = (e) => {
-    const imageBox = document.querySelector(".imageBox");
+ 
     imageBox.classList.add("hasFile");
 
-    console.log(fileInput.files[0]);
-   if(fileInput.files!='')
-   {
-    postImageElement.src = URL.createObjectURL(fileInput.files[0]);
-   }
+    // console.log(filePost.files.length);
+    if (filePost.files.length > 0) {
+      postImageElement.src = URL.createObjectURL(filePost.files[0]);
+    }
     setPostImage("");
   };
   React.useEffect(() => {
-
     if (postImage != "") {
-      fileInput.addEventListener("change", viewFile);
+      filePost.addEventListener("change", viewFile);
     }
   }, [postImage]);
-  const handlePost = ()=>{
-    
-  }
+  const handlePost = () => {
+    var postText = document.getElementById("postText").value;
+    if (filePost.files.length > 0) {
+      const post = {
+        file: filePost.files[0],
+        status: postText,
+        uid:auth.uid
+      };
+      dispatch(pushPost(post));
+      imageBox.classList.remove("hasFile");
+      postImageElement.src = "";
+      postText = "";
+    }
+  };
   return (
     <div className="modalPost">
       <div className="modalWrapper">
@@ -59,7 +75,10 @@ const ModalPost = () => {
           </div>
         </div>
         <div className="statusBox">
-          <textarea placeholder="What are you thinking ?"></textarea>
+          <textarea
+            id="postText"
+            placeholder="What are you thinking ?"
+          ></textarea>
           <div className="imageBox">
             <img id="postImageElement" />
           </div>
