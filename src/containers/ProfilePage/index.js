@@ -14,6 +14,8 @@ import ModalPost from "../../components/ModalPost/index";
 import { useSelector, useDispatch } from "react-redux";
 import { getPostByKey, getRealTimePosts } from "../../actions";
 import Loading from "../../components/Layout/UI/Loading/index";
+import ModalUpdateAvatar from "../../components/ModalUpdateAvatar";
+
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const post = useSelector((state) => state.post);
@@ -24,25 +26,34 @@ const ProfilePage = () => {
   const openPostDetail = (key) => {
     const postDetail = document.querySelector(".postDetail");
     postDetail.classList.add("open");
-    dispatch(getPostByKey(key))
+    dispatch(getPostByKey(key));
   };
   const openModalPost = (item) => {
     document.querySelector(".modalPost").classList.add("open");
-   
+  };
+
+  const openModalUpdateAvatar = () => {
+    document.querySelector(".modalUpdateAvatar").classList.add("open");
   };
   return (
     <Layout>
       <ModalPost />
+      <ModalUpdateAvatar />
       <PostDetail />
       <div className="profile">
         <div className="profileHead">
           <div className="avatar">
-            <img alt={Mint} src={Mint} />
-            <AiOutlinePlusCircle className="icon" />
+            <div className="avatarWrap">
+              <img alt={Mint} src={auth.avatarUrl} />
+            </div>
+            <AiOutlinePlusCircle
+              onClick={openModalUpdateAvatar}
+              className="icon"
+            />
           </div>
           <div className="details">
             <div className="userName">
-              <p>Mint</p>
+              <p>{auth.firstName + " " + auth.lastName}</p>
               <Button>Edit Profile</Button>
               <AiOutlineSetting className="icon" />
             </div>
@@ -66,7 +77,11 @@ const ProfilePage = () => {
           {!post.loadingPost ? (
             post.posts.length > 0 ? (
               post.posts.map((item, index) => (
-                <div key={item.key} onClick={()=>openPostDetail(item.key)} className="post">
+                <div
+                  key={item.key}
+                  onClick={() => openPostDetail(item.key)}
+                  className="post"
+                >
                   <div className="postImage">
                     <img alt={item.createdAt} src={item.file} />
                   </div>

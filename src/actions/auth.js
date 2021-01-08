@@ -66,7 +66,7 @@ export const signIn = (user) => {
     dispatch({
       type: `${authConstants.USER_LOGIN}_REQUEST`,
     });
-    const db = firebase.firestore()
+    const db = firebase.firestore();
     firebase
       .auth()
       .signInWithEmailAndPassword(user.email, user.password)
@@ -74,10 +74,11 @@ export const signIn = (user) => {
         db.collection("users")
           .doc(data.user.uid)
           .update({
-            isOnline : true
+            isOnline: true,
           })
           .then(() => {
             var name = data.user.displayName;
+            const avatarUrl = data.user.photoURL;
             name = name.split(" ");
             var stringArray = new Array();
             for (var i = 0; i < name.length; i++) {
@@ -90,6 +91,7 @@ export const signIn = (user) => {
               lastName,
               uid: data.user.uid,
               email: data.user.email,
+              avatarUrl,
             };
             localStorage.setItem(
               "user",
@@ -108,7 +110,7 @@ export const signIn = (user) => {
           type: `${authConstants.USER_LOGIN}_FAILURE`,
           payload: { error: err.message },
         });
-      })
+      });
   };
 };
 
@@ -155,5 +157,56 @@ export const logout = (uid) => {
             });
           });
       });
+  };
+};
+
+export const updateUserAvatar = (uid, file) => {
+  return async (dispatch) => {
+    dispatch({ type: `${authConstants.UPDATE_USER_AVATAR}_REQUEST` });
+    const db = firebase.firestore();
+    const ref = firebase.storage().ref();
+    const name = new Date() + "-" + file.name;
+    const metaData = file.type;
+    const task = ref.child(name).put(file, metaData);
+    var userLocal = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+    task.then((snapshot) => {
+      snapshot.ref
+        .getDownloadURL()
+        .then((url) => {
+          const user = firebase.auth().currentUser;
+          user.updateProfile({
+            photoURL: url,
+          });
+          db.collection("users").doc(uid).update({
+            avatarUrl: url,
+          });
+
+          userLocal = {
+            ...userLocal.user,
+            avatarUrl: url,
+          };
+          localStorage.setItem(
+            "user",
+            JSON.stringify({
+              user: userLocal,
+            })
+          );
+        })
+
+        .then(() => {
+          dispatch({
+            type: `${authConstants.UPDATE_USER_AVATAR}_SUCCESS`,
+            payload: { notify: "Update successfully",  avatarUrl : userLocal.avatarUrl },
+          });
+        })
+        .catch((err) => {
+          dispatch({
+            type: `${authConstants.UPDATE_USER_AVATAR}_FALURE`,
+            payload: { error: err },
+          });
+        });
+    });
   };
 };

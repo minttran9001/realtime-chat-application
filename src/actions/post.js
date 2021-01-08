@@ -43,7 +43,7 @@ export const getPostByKey = (key) => {
     const commentRef = db.collection("comments");
     postRef.onSnapshot((snapshot) => {
       let postItem = {};
-      commentRef.where("pid", "==", key).onSnapshot((commentSnapShot) => {
+      commentRef.orderBy("createdAt","desc").where("pid", "==", key).onSnapshot((commentSnapShot) => {
         const comments = [];
         commentSnapShot.forEach((commentItem) => {
           comments.push(commentItem.data());

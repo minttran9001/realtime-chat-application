@@ -1,6 +1,7 @@
 export const authConstants = {
     USER_LOGIN : 'USER_LOGIN',
-    USER_LOGOUT : 'USER_LOGOUT'
+    USER_LOGOUT : 'USER_LOGOUT',
+    UPDATE_USER_AVATAR : 'UPDATE_USER_AVATAR'
 }
 
 export const userConstants = {
@@ -9,6 +10,7 @@ export const userConstants = {
     GET_REALTIME_MESSAGE : 'GET_REALTIME_MESSAGE',
     SET_SEEN_MESSAGE : 'SET_SEEN_MESSAGE',
     GET_LOADMORE_MESSAGE : 'GET_LOADMORE_MESSAGE',
+
 }
 export const postConstants = {
     PUSH_POST : 'PUSH_POST',

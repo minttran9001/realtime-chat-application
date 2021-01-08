@@ -26,6 +26,7 @@ import {
   setSeenMessage,
   updateMessage,
 } from "../../actions";
+import noavt from '../../images/noavtar.png'
 import Title from "../../components/Layout/UI/Title/index";
 const Home = () => {
   const [isSelected, setIsSelected] = useState("");
@@ -174,7 +175,7 @@ const Home = () => {
                 className="friend"
               >
                 <div className="avatar">
-                  <img src={Mint} alt="avatar" />
+                  <img src={item.avatarUrl!=null ? item.avatarUrl : noavt} alt="avatar" />
                   <span
                     className={item.isOnline ? "isOnline" : "isOffline"}
                   ></span>
@@ -208,7 +209,7 @@ const Home = () => {
           <div className="chatBox">
             <div className="headBox">
               <div className="headUser">
-                <img alt="avatar" src={Mint} />
+                <img alt="avatar" src={userSelected.avatarUrl!=null ? userSelected.avatarUrl : noavt} />
                 <p>{userSelected.firstName}</p>
               </div>
               <div className="headCall">
@@ -231,7 +232,7 @@ const Home = () => {
                       }
                     >
                       {auth.uid !== item.user_uid_1 ? (
-                        <img className="avatar" src={Mint} />
+                        <img className="avatar" src={userSelected.avatarUrl!=null ? userSelected.avatarUrl : noavt}  />
                       ) : (
                         <></>
                       )}

@@ -13,11 +13,22 @@
             justify-content: center;
             display: flex;
             align-items: center;
-
+            width: 170px;
+            height: 170px;
+            display: flex;
+           .avatarWrap{
+            overflow: hidden;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            height: 100%;
             img{
                 border-radius: 50%;
-                width: 170px;
+                width:100%
+                
             }
+           }
             .icon{
                 background-color: transparent;
                 position: absolute;
@@ -25,6 +36,12 @@
                 bottom: 15px;
                 cursor: pointer;
                 right: 0px;
+            }
+            #fileAvatar{
+                visibility: hidden;
+                right: -240px;
+                bottom: 20px;
+                position: absolute;
             }
         }
         .details{
