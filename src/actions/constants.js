@@ -19,3 +19,8 @@ export const postConstants = {
     CLEAR_POST_ITEM :'CLEAR_POST_ITEM',
     PUSH_COMMENT : 'PUSH_COMMENT'
 }
+
+export const interactionConstants = {
+    GET_REALTIME_INTERACTIONS : 'GET_REALTIME_INTERACTIONS',
+    UPDATE_LIKE : 'UPDATE_LIKES',
+}

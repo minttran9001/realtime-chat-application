@@ -1,31 +1,44 @@
 import React from "react";
 import "./style.scss";
 import Mint from "../../images/mint.jpg";
-import { AiOutlineSend, AiOutlineHeart, AiOutlineClose } from "react-icons/ai";
+import {
+  AiOutlineSend,
+  AiFillHeart,
+  AiOutlineHeart,
+  AiOutlineClose,
+} from "react-icons/ai";
 import { VscBookmark } from "react-icons/vsc";
 import { BsChat } from "react-icons/bs";
 import Button from "../Layout/UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Layout/UI/Loading";
 import { pushPost, pushPostComment } from "../../actions/post";
+import { getRealtimeInteractions, updateLike } from "../../actions";
 const PostDetail = () => {
   var { item, loading, comments } = useSelector(
     (state) => state.post.postbykey
   );
   const auth = useSelector((state) => state.auth);
+  const { interactions } = useSelector((state) => state.interaction);
   const dispatch = useDispatch();
 
   const [replySelected, setReplySelected] = React.useState([]);
   const [commentValue, setCommentValue] = React.useState("");
 
+  React.useEffect(() => {
+    if (item != {}) {
+      dispatch(getRealtimeInteractions(item.key));
+    }
+    console.log(item.key);
+  }, [item]);
   const closePostDetail = () => {
     const postDetail = document.querySelector(".postDetail");
     postDetail.classList.remove("open");
     const replies = document.querySelector(".replies");
     if (replies != null) {
       replies.classList.remove("view");
-      const newArr = []
-      setReplySelected(newArr)
+      const newArr = [];
+      setReplySelected(newArr);
     }
   };
   const hanldePostComment = (e) => {
@@ -49,7 +62,15 @@ const PostDetail = () => {
     const newArr = [...replySelected];
     document.querySelectorAll(".replies")[index].classList.remove("view");
     newArr[index] = false;
-    setReplySelected(newArr)
+    setReplySelected(newArr);
+  };
+  const handleLikePost = () => {
+    const obj = {
+      pid: item.key,
+      uid: auth.uid,
+    };
+    console.log("liked");
+    dispatch(updateLike(obj));
   };
   return (
     <div className="postDetail">
@@ -146,7 +167,15 @@ const PostDetail = () => {
               <div className="postLiked">
                 <div className="iconBox">
                   <div className="likeIcon">
-                    <AiOutlineHeart className="icon" />
+                    {interactions.find((int) => int.uid = auth.uid) ? (
+                      <AiFillHeart onClick={handleLikePost} className="icon" />
+                    ) : (
+                      <AiOutlineHeart
+                        onClick={handleLikePost}
+                        className="icon"
+                      />
+                    )}
+
                     <BsChat className="icon" />
                     <AiOutlineSend className="icon" />
                   </div>
@@ -155,7 +184,7 @@ const PostDetail = () => {
                   </div>
                 </div>
                 <div className="likedBy">
-                  <p>Liked by 0 peoples</p>
+                  <p>Liked by {interactions.length} peoples</p>
                   <p>{item.createdAt.toDate().toDateString()}</p>
                 </div>
               </div>
