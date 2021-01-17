@@ -26,10 +26,9 @@ const PostDetail = () => {
   const [commentValue, setCommentValue] = React.useState("");
 
   React.useEffect(() => {
-    if (item != {}) {
+    if (item !== {}) {
       dispatch(getRealtimeInteractions(item.key));
     }
-    console.log(item.key);
   }, [item]);
   const closePostDetail = () => {
     const postDetail = document.querySelector(".postDetail");

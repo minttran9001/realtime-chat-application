@@ -4,30 +4,29 @@ export const getRealTimeUser = (uid) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_REALTIME_USERS}_REQUEST` });
     const db = firebase.firestore();
-
-    const unsubscribe = db
-      .collection("users")
-      .where("uid", "!=", uid)
-      .onSnapshot(function (snap) {
-        const users = [];
-        snap.forEach((doc) => {
-          if (doc.data().length != users.length) {
-            users.push(doc.data());
-          }
+    if (uid !== undefined) {
+      db.collection("users")
+        .where("uid", "!=", uid)
+        .onSnapshot(function (snap) {
+          const users = [];
+          snap.forEach((doc) => {
+            if (doc.data().length !== users.length) {
+              users.push({key : doc.id,...doc.data()});
+            }
+          });
+          dispatch({
+            type: `${userConstants.GET_REALTIME_USERS}_SUCCESS`,
+            payload: { users },
+          });
         });
-        dispatch({
-          type: `${userConstants.GET_REALTIME_USERS}_SUCCESS`,
-          payload: { users },
-        });
-      });
-    return unsubscribe;
+    }
   };
 };
 export const updateMessage = ({ msgObj, type }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.UPDATE_MESSAGE}_REQUEST` });
     const db = firebase.firestore();
-    if (type != "file") {
+    if (type !== "file") {
       db.collection("conversations")
         .add({
           ...msgObj,
@@ -93,6 +92,74 @@ export const setSeenMessage = ({ uid_1, uid_2 }) => {
       });
   };
 };
+export const getUserById = ({ uid }) => {
+  return async (dispatch) => {
+    dispatch({ type: `${userConstants.GET_USER_PROFILE_BY_ID}_REQUEST` });
+    const db = firebase.firestore();
+    const userRef = db.collection("users");
+    const postRef = db.collection("posts");
+
+    postRef.where("uid", "==", uid).onSnapshot(async (snapshot) => {
+      const posts = [];
+      snapshot.forEach((doc) => {
+        posts.push({ key: doc.id, ...doc.data() });
+      });
+      const userByKey = (await userRef.doc(uid).get()).data();
+      dispatch({
+        type: `${userConstants.GET_USER_PROFILE_BY_ID}_SUCCESS`,
+        payload: { userByKey: { ...userByKey, posts: posts } },
+      });
+    });
+  };
+};
+export const updateUserAvatar = (uid, file) => {
+  return async (dispatch) => {
+    dispatch({ type: `${userConstants.UPDATE_USER_AVATAR}_REQUEST` });
+    const db = firebase.firestore();
+    const ref = firebase.storage().ref();
+    const name = new Date() + "-" + file.name;
+    const metaData = file.type;
+    const task = ref.child(name).put(file, metaData);
+    var userLocal = localStorage.getItem("user")
+      ? JSON.parse(localStorage.getItem("user"))
+      : null;
+    task.then((snapshot) => {
+      snapshot.ref
+        .getDownloadURL()
+        .then((url) => {
+          const user = firebase.auth().currentUser;
+          user.updateProfile({
+            photoURL: url,
+          });
+          db.collection("users").doc(uid).update({
+            avatarUrl: url,
+          });
+
+          userLocal = {
+            ...userLocal.user,
+            avatarUrl: url,
+          };
+        })
+
+        .then(() => {
+          dispatch({
+            type: `${userConstants.UPDATE_USER_AVATAR}_SUCCESS`,
+            payload: {
+              notify: "Update successfully",
+              avatarUrl: userLocal.avatarUrl,
+            },
+          });
+        })
+        .catch((err) => {
+          dispatch({
+            type: `${userConstants.UPDATE_USER_AVATAR}_FALURE`,
+            payload: { error: err },
+          });
+        });
+    });
+  };
+};
+
 export const getLoadMoreConversations = ({ uid_1, uid_2, lastestDoc }) => {
   return async (dispatch) => {
     dispatch({ type: `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST` });
@@ -140,9 +207,9 @@ export const getRealTimeConversations = ({ uid_1, uid_2, type }) => {
         const conversations = [];
         querySnapshot.forEach((doc) => {
           if (
-            (doc.data().user_uid_1 == uid_1 &&
-              doc.data().user_uid_2 == uid_2) ||
-            (doc.data().user_uid_1 == uid_2 && doc.data().user_uid_2 == uid_1)
+            (doc.data().user_uid_1 === uid_1 &&
+              doc.data().user_uid_2 === uid_2) ||
+            (doc.data().user_uid_1 === uid_2 && doc.data().user_uid_2 === uid_1)
           ) {
             conversations.push(doc.data());
           }

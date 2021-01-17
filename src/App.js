@@ -21,7 +21,7 @@ function App() {
     { path: "/realtime-chat-application", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Sign Up", component: SignUp },
-    { path: "/profile", name: "Profile", component: Profile },
+    { path: "/profile/:uid", name: "Profile", component: Profile },
   ];
 
   return (

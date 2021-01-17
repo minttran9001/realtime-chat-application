@@ -6,6 +6,13 @@ const initialState = {
   loadingUser: true,
   loadingChat: true,
   lastestDoc: {},
+  loadingUserByKey: false,
+  userByKey: {
+    posts : []
+  },
+  error: "",
+  notify : "",
+  updating :false,
 };
 export default (state = initialState, action) => {
   switch (action.type) {
@@ -33,7 +40,7 @@ export default (state = initialState, action) => {
         ...state,
         loadingChat: false,
         conversations: action.payload.conversations,
-        lastestDoc : action.payload.lastDoc,
+        lastestDoc: action.payload.lastDoc,
       };
       return state;
     case `${userConstants.GET_LOADMORE_MESSAGE}_REQUEST`:
@@ -58,6 +65,42 @@ export default (state = initialState, action) => {
         ...state,
       };
       return state;
+    case `${userConstants.GET_USER_PROFILE_BY_ID}_REQUEST`:
+      state = {
+        ...state,
+        loadingUserByKey: true,
+      };
+      return state;
+    case `${userConstants.GET_USER_PROFILE_BY_ID}_SUCCESS`:
+      state = {
+        ...state,
+        loadingUserByKey: false,
+        userByKey: action.payload.userByKey,
+      };
+      return state;
+    case `${userConstants.GET_USER_PROFILE_BY_ID}_FAILURE`:
+      state = {
+        ...state,
+        error: action.payload.error,
+      };
+      return state;
+      case `${userConstants.UPDATE_USER_AVATAR}_REQUEST`:
+        state={
+          ...state,
+          updating:true
+        }
+        return state;
+      case `${userConstants.UPDATE_USER_AVATAR}_SUCCESS`:
+        state = {
+          ...state,
+          updating : false,
+          notify: action.payload.notify,
+          userByKey : {
+            ...state.userByKey,
+            avatarUrl: action.payload.avatarUrl,
+          }
+        };
+        return state;
     default:
       return state;
   }

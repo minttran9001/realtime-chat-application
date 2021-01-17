@@ -19,7 +19,8 @@ export const pushPost = (post) => {
             createdAt: new Date(),
             status: post.status,
             uid: post.uid,
-            liked: 0,
+            likeCount: 0,
+            commentCount : 0,
           })
           .then(() => {
             dispatch({ type: `${postConstants.PUSH_POST}_SUCCESS` });
@@ -43,29 +44,32 @@ export const getPostByKey = (key) => {
     const commentRef = db.collection("comments");
     postRef.onSnapshot((snapshot) => {
       let postItem = {};
-      commentRef.orderBy("createdAt","desc").where("pid", "==", key).onSnapshot((commentSnapShot) => {
-        const comments = [];
-        commentSnapShot.forEach((commentItem) => {
-          comments.push(commentItem.data());
-        });
-        snapshot.forEach((doc) => {
-          if (doc.id == key) {
-            postItem = { key: doc.id, ...doc.data() };
+      commentRef
+        .orderBy("createdAt", "desc")
+        .where("pid", "==", key)
+        .onSnapshot((commentSnapShot) => {
+          const comments = [];
+          commentSnapShot.forEach((commentItem) => {
+            comments.push(commentItem.data());
+          });
+          snapshot.forEach((doc) => {
+            if (doc.id === key) {
+              postItem = { key: doc.id, ...doc.data() };
+            }
+          });
+
+          if (postItem !== {}) {
+            dispatch({
+              type: `${postConstants.GET_POST_BY_KEY}_SUCCESS`,
+              payload: { postItem, comments },
+            });
+          } else {
+            dispatch({
+              type: `${postConstants.GET_POST_BY_KEY}_FAILURE`,
+              payload: { error: `Item with key ${key} does not exist` },
+            });
           }
         });
-
-        if (postItem != {}) {
-          dispatch({
-            type: `${postConstants.GET_POST_BY_KEY}_SUCCESS`,
-            payload: { postItem ,comments },
-          });
-        } else {
-          dispatch({
-            type: `${postConstants.GET_POST_BY_KEY}_FAILURE`,
-            payload: { error: `Item with key ${key} does not exist` },
-          });
-        }
-      });
     });
   };
 };
@@ -73,17 +77,28 @@ export const getRealTimePosts = (uid) => {
   return async (dispatch) => {
     dispatch({ type: `${postConstants.GET_REALTIME_POSTS}_REQUEST` });
     const db = firebase.firestore();
+
     db.collection("posts")
       .where("uid", "==", uid)
       .orderBy("createdAt", "desc")
       .onSnapshot((snapshot) => {
         const posts = [];
         snapshot.forEach((doc) => {
-          posts.push({ key: doc.id, ...doc.data() });
-        });
-        dispatch({
-          type: `${postConstants.GET_REALTIME_POSTS}_SUCCESS`,
-          payload: { posts: posts },
+          db.collection("interactions")
+            .where("pid", "==", doc.id)
+            .onSnapshot((query) => {
+              query.forEach((dc) => {
+                  // interactions.push(dc.data());                
+              });
+              posts.push({
+                key: doc.id,
+                ...doc.data(),
+              });
+              dispatch({
+                type: `${postConstants.GET_REALTIME_POSTS}_SUCCESS`,
+                payload: { posts: posts },
+              });
+            });
         });
       });
   };

@@ -13,6 +13,10 @@ import {
   AiOutlineSend,
   AiOutlineCheckCircle,
   AiFillCheckCircle,
+  AiOutlineUser,
+  AiOutlineDelete,
+  AiOutlineBell,
+  AiOutlineLock,
 } from "react-icons/ai";
 import { BiLoaderCircle } from "react-icons/bi";
 import { RiSendPlaneFill } from "react-icons/ri";
@@ -26,15 +30,16 @@ import {
   setSeenMessage,
   updateMessage,
 } from "../../actions";
-import noavt from '../../images/noavtar.png'
+import noavt from "../../images/noavtar.png";
 import Title from "../../components/Layout/UI/Title/index";
+import { NavLink } from "react-router-dom";
 const Home = () => {
   const [isSelected, setIsSelected] = useState("");
   const [userSelected, setUserSelected] = useState("");
   const [message, setMessage] = useState("");
   const [messageImg, setMessageImg] = useState("");
   const dispatch = useDispatch();
-
+  const [menuSelected, setMenuSelected] = useState(-1);
   const {
     users,
     conversations,
@@ -160,56 +165,118 @@ const Home = () => {
   const handleSeen = (e) => {
     dispatch(setSeenMessage({ uid_1: auth.uid, uid_2: userSelected.uid }));
   };
+  const handleCloseFriendBox = (e) => {
+    e.stopPropagation();
+    if (menuSelected >= 0) {
+      const myTarget = document.querySelectorAll(".userMenu")[menuSelected];
+      const clicked = e.target.className;
+      if (clicked !== myTarget) {
+        myTarget.classList.remove("open");
+        setMenuSelected(-1)
+      }
+    }
+  };
+  const handleOpenFriendBox = (e, index) => {
+    e.stopPropagation();
+    document.querySelectorAll(".userMenu")[index].classList.add("open");
+    setMenuSelected(index);
+    if (menuSelected >= 0) {
+      document
+        .querySelectorAll(".userMenu")
+        [menuSelected].classList.remove("open");
+    }
+  };
   return (
     <Layout>
       <div className="homePage">
-        {!loadingUser ? (
-          <div className="friendList">
-            {users.map((item, index) => (
-              <div
-                key={index}
-                onClick={() => {
-                  initChat(item);
-                  selectItem(index);
-                }}
-                className="friend"
-              >
-                <div className="avatar">
-                  <img src={item.avatarUrl!=null ? item.avatarUrl : noavt} alt="avatar" />
-                  <span
-                    className={item.isOnline ? "isOnline" : "isOffline"}
-                  ></span>
-                </div>
-                <div className="friendState">
-                  <p className="friendName">
-                    {item.firstName + " " + item.lastName}
-                  </p>
-                  <div className="friendLastText">
-                    <p className="lastText">See you again </p>
-                    <span></span>
-                    <p>4 hours ago</p>
+        <div className="friendListWrap">
+          {!loadingUser ? (
+            <div className="friendList">
+              {users.map((item, index) => (
+                <div
+                  key={index}
+                  onClick={() => {
+                    initChat(item);
+                    selectItem(index);
+                  }}
+                  className="friend"
+                >
+                  <div className="avatar">
+                    <img
+                      src={item.avatarUrl != null ? item.avatarUrl : noavt}
+                      alt="avatar"
+                    />
+                    <span
+                      className={item.isOnline ? "isOnline" : "isOffline"}
+                    ></span>
+                  </div>
+                  <div className="friendState">
+                    <p className="friendName">
+                      {item.firstName + " " + item.lastName}
+                    </p>
+                    <div className="friendLastText">
+                      <p className="lastText">See you again </p>
+                      <span></span>
+                      <p>4 hours ago</p>
+                    </div>
+                  </div>
+                  <div
+                    className="friendButton"
+                    onClick={(e) => {
+                      index !== menuSelected
+                        ? handleOpenFriendBox(e, index)
+                        : handleCloseFriendBox(e, index);
+                    }}
+                  >
+                    <button>
+                      <div className="circle"></div>
+                      <div className="circle"></div>
+                      <div className="circle"></div>
+                    </button>
+                  </div>
+                  <div className="userMenu">
+                    <div className="menuGroup">
+                      <div className="menuItem">
+                        <AiOutlineUser className="icon" />
+                        <NavLink to={`/profile/${item.key}`}>Go to profile page</NavLink>
+                      </div>
+                      <div className="menuItem">
+                        <AiOutlineBell className="icon" />
+                        <span>Turn off notification</span>
+                      </div>
+                    </div>
+                    <div className="menuGroup">
+                      <div className="menuItem">
+                        <AiOutlineDelete className="icon" />
+                        <span>Delete conversation</span>
+                      </div>
+                      <div className="menuItem">
+                        <AiOutlineLock className="icon" />
+                        <span>Block</span>
+                      </div>
+                    </div>
                   </div>
                 </div>
-                <div className="friendButton">
-                  <button>
-                    <div className="circle"></div>
-                    <div className="circle"></div>
-                    <div className="circle"></div>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="friendList loading">
-            <BiLoaderCircle className="icon" />
-          </div>
-        )}
+              ))}
+            </div>
+          ) : (
+            <div className="friendList loading">
+              <BiLoaderCircle className="icon" />
+            </div>
+          )}
+        </div>
         {userSelected !== "" ? (
           <div className="chatBox">
             <div className="headBox">
               <div className="headUser">
-                <img alt="avatar" src={userSelected.avatarUrl!=null ? userSelected.avatarUrl : noavt} />
+                <img
+                  alt="avatar"
+                  src={
+                    userSelected.avatarUrl != null
+                      ? userSelected.avatarUrl
+                      : noavt
+                  }
+                />
                 <p>{userSelected.firstName}</p>
               </div>
               <div className="headCall">
@@ -226,31 +293,39 @@ const Home = () => {
                     <div
                       key={index}
                       className={
-                        auth.uid == item.user_uid_1
+                        auth.uid === item.user_uid_1
                           ? "chatWrapper right"
                           : "chatWrapper left"
                       }
                     >
                       {auth.uid !== item.user_uid_1 ? (
-                        <img className="avatar" src={userSelected.avatarUrl!=null ? userSelected.avatarUrl : noavt}  />
+                        <img
+                        alt={index}
+                          className="avatar"
+                          src={
+                            userSelected.avatarUrl !== null
+                              ? userSelected.avatarUrl
+                              : noavt
+                          }
+                        />
                       ) : (
                         <></>
                       )}
                       {item.type !== "file" ? (
-                        <div className='messageWrap'>
+                        <div className="messageWrap">
                           <p key={index}>{item.message}</p>
                         </div>
-
                       ) : (
                         <img
                           className="messageFile"
+                          alt={index}
                           src={item.file}
                           key={index}
                         />
                       )}
                       <AiOutlineCheckCircle
                         className={
-                          auth.uid == item.user_uid_1 && !item.isView
+                          auth.uid === item.user_uid_1 && !item.isView
                             ? "icon"
                             : "icon gone"
                         }
@@ -267,7 +342,7 @@ const Home = () => {
             <div className="typeArea">
               <div className="action">
                 <div className="fileSend">
-                  <img id="messageImg" />
+                  <img alt="messageImg" id="messageImg" />
 
                   <div className="before"></div>
                   <AiOutlineSend onClick={submitMessageFile} className="icon" />

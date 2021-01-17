@@ -12,10 +12,11 @@ function isEmpty(obj) {
 export const updateLike = (interaction) => {
   return async (dispatch) => {
     const db = firebase.firestore();
-
+    const postRef = db.collection('posts')
     db.collection("interactions")
       .where("uid", "==", interaction.uid)
       .where("pid", "==", interaction.pid)
+      .limit(1)
       .get()
       .then((snapshot) => {
         let newObj = {};
@@ -35,6 +36,9 @@ export const updateLike = (interaction) => {
               createdAt: new Date(),
             })
             .then(() => {
+              postRef.doc(interaction.pid).update({
+                likeCount: firebase.firestore.FieldValue.increment(1)
+            });
               dispatch({
                 type: `${interactionConstants.UPDATE_LIKE}_SUCCESS`,
               });
@@ -51,6 +55,9 @@ export const updateLike = (interaction) => {
             .doc(newObj.key)
             .delete()
             .then(() => {
+              postRef.doc(interaction.pid).update({
+                likeCount: firebase.firestore.FieldValue.increment(-1)
+            });
               dispatch({
                 type: `${interactionConstants.UPDATE_LIKE}_SUCCESS`,
               });

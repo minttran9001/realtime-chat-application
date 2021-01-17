@@ -4,7 +4,7 @@ import Button from "../Layout/UI/Button";
 import Mint from "../../images/mint.jpg";
 import { AiOutlineClose } from "react-icons/ai";
 import { useDispatch, useSelector } from "react-redux";
-import { updateUserAvatar } from "../../actions/auth";
+import { updateUserAvatar } from "../../actions/user";
 const ModalUpdateAvatar = () => {
     const dispatch = useDispatch()
     const auth = useSelector(state => state.auth)

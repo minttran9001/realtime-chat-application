@@ -59,20 +59,6 @@ export default (state = initialState, action) => {
         error: action.payload.error,
       };
       return state;
-    case `${authConstants.UPDATE_USER_AVATAR}_REQUEST`:
-      state={
-        ...state,
-        updating:true
-      }
-      return state;
-    case `${authConstants.UPDATE_USER_AVATAR}_SUCCESS`:
-      state = {
-        ...state,
-        updating : false,
-        notify: action.payload.notify,
-        avatarUrl: action.payload.avatarUrl,
-      };
-      return state;
     default:
       return state;
   }
