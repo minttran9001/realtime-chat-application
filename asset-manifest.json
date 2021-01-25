@@ -1,24 +1,23 @@
 {
   "files": {
-    "main.css": "/realtime-chat-application/static/css/main.e6ca1544.chunk.css",
-    "main.js": "/realtime-chat-application/static/js/main.6ce04adf.chunk.js",
-    "main.js.map": "/realtime-chat-application/static/js/main.6ce04adf.chunk.js.map",
-    "runtime-main.js": "/realtime-chat-application/static/js/runtime-main.be25e024.js",
-    "runtime-main.js.map": "/realtime-chat-application/static/js/runtime-main.be25e024.js.map",
-    "static/js/2.7a030113.chunk.js": "/realtime-chat-application/static/js/2.7a030113.chunk.js",
-    "static/js/2.7a030113.chunk.js.map": "/realtime-chat-application/static/js/2.7a030113.chunk.js.map",
-    "static/js/3.84e7cbd9.chunk.js": "/realtime-chat-application/static/js/3.84e7cbd9.chunk.js",
-    "static/js/3.84e7cbd9.chunk.js.map": "/realtime-chat-application/static/js/3.84e7cbd9.chunk.js.map",
+    "main.css": "/realtime-chat-application/static/css/main.ce3f7089.chunk.css",
+    "main.js": "/realtime-chat-application/static/js/main.504dcbb3.chunk.js",
+    "main.js.map": "/realtime-chat-application/static/js/main.504dcbb3.chunk.js.map",
+    "runtime-main.js": "/realtime-chat-application/static/js/runtime-main.9706ab8d.js",
+    "runtime-main.js.map": "/realtime-chat-application/static/js/runtime-main.9706ab8d.js.map",
+    "static/js/2.9f2af902.chunk.js": "/realtime-chat-application/static/js/2.9f2af902.chunk.js",
+    "static/js/2.9f2af902.chunk.js.map": "/realtime-chat-application/static/js/2.9f2af902.chunk.js.map",
     "index.html": "/realtime-chat-application/index.html",
-    "static/css/main.e6ca1544.chunk.css.map": "/realtime-chat-application/static/css/main.e6ca1544.chunk.css.map",
-    "static/js/2.7a030113.chunk.js.LICENSE.txt": "/realtime-chat-application/static/js/2.7a030113.chunk.js.LICENSE.txt",
+    "static/css/main.ce3f7089.chunk.css.map": "/realtime-chat-application/static/css/main.ce3f7089.chunk.css.map",
+    "static/js/2.9f2af902.chunk.js.LICENSE.txt": "/realtime-chat-application/static/js/2.9f2af902.chunk.js.LICENSE.txt",
+    "static/media/Asset 2.5384deb3.png": "/realtime-chat-application/static/media/Asset 2.5384deb3.png",
     "static/media/mint.98ef681e.jpg": "/realtime-chat-application/static/media/mint.98ef681e.jpg",
     "static/media/noavtar.a69237c0.png": "/realtime-chat-application/static/media/noavtar.a69237c0.png"
   },
   "entrypoints": [
-    "static/js/runtime-main.be25e024.js",
-    "static/js/2.7a030113.chunk.js",
-    "static/css/main.e6ca1544.chunk.css",
-    "static/js/main.6ce04adf.chunk.js"
+    "static/js/runtime-main.9706ab8d.js",
+    "static/js/2.9f2af902.chunk.js",
+    "static/css/main.ce3f7089.chunk.css",
+    "static/js/main.504dcbb3.chunk.js"
   ]
 }
