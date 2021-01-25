@@ -1,15 +1,19 @@
 .header {
-    width: 100%;
+    width: 90%;
     height: 100px;
-    margin: 20px 0;
+    margin: 20px auto;
     .navBar {
         margin-top: 20px;
         display: flex;
         align-items: center;
         justify-content: space-around;
 
-        img {
-            width: 100%;
+        .logoArea{
+            width: 200px;
+
+            img{
+                width: 100%;
+            }
         }
 
         .navSide {
@@ -39,8 +43,9 @@
                         bottom: 0;
                     }
                     .navLink {
-                        text-transform: uppercase;
                         text-decoration: none;
+                        font-size: 13px;
+                        letter-spacing: 1px;
                     }
                 }
 

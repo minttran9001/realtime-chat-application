@@ -8,51 +8,69 @@ import {
 } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
 import "./style.scss";
-import Mint from "../../images/mint.jpg";
 import PostDetail from "../../components/PostDetail/index";
 import ModalPost from "../../components/ModalPost/index";
 import { useSelector, useDispatch } from "react-redux";
 import { getPostByKey, getUserById } from "../../actions";
 import Loading from "../../components/Layout/UI/Loading/index";
-import noavt from '../../images/noavtar.png'
+import noavt from "../../images/noavtar.png";
 
 import ModalUpdateAvatar from "../../components/ModalUpdateAvatar";
 
 const ProfilePage = (props) => {
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state);
+  const { user, auth } = useSelector((state) => state);
+
+  //use Memo
+
   const userByKey = React.useMemo(() => {
     return user.userByKey;
   }, [user.userByKey]);
+  const auth_uid = React.useMemo(() => {
+    return auth.uid;
+  }, [auth.uid]);
   const uidParam = React.useMemo(() => {
     return props.match.params;
   }, [props.match.params]);
+
+  //end use Memo
+
   React.useEffect(() => {
     dispatch(getUserById(uidParam));
   }, [uidParam]);
+
   const openPostDetail = (key) => {
+    
     const postDetail = document.querySelector(".postDetail");
     postDetail.classList.add("open");
-    dispatch(getPostByKey(key));
+    dispatch(getPostByKey(key,userByKey.uid));
   };
+
   const openModalPost = () => {
     document.querySelector(".modalPost").classList.add("open");
   };
+
   const openModalUpdateAvatar = () => {
     document.querySelector(".modalUpdateAvatar").classList.add("open");
   };
+
   return (
     <Layout>
       <ModalPost />
       <ModalUpdateAvatar />
-      <PostDetail />
+      <PostDetail auth = {auth_uid} />
       {!user.loadingUserByKey ? (
         <div className="profile">
           <div className="profileHead">
             <div className="avatar">
               <div className="avatarWrap">
                 {
-                  <img src={userByKey.avatarUrl!=null ? userByKey.avatarUrl : noavt} alt="avatar" />
+                  <img
+                    src={
+                      userByKey.avatarUrl != null ? userByKey.avatarUrl : noavt
+                    }
+                    alt="avatar"
+                  />
                 }
               </div>
               <AiOutlinePlusCircle
@@ -63,7 +81,9 @@ const ProfilePage = (props) => {
             <div className="details">
               <div className="userName">
                 <p>{userByKey.firstName + " " + userByKey.lastName}</p>
-                <Button>Edit Profile</Button>
+                <Button>
+                  {auth_uid === userByKey.uid ? "Edit Profile" : "Follow"}
+                </Button>
                 <AiOutlineSetting className="icon" />
               </div>
               <div className="userFollow">
@@ -79,12 +99,16 @@ const ProfilePage = (props) => {
               </div>
             </div>
           </div>
-          <div className="postButton">
-            <Button onClick={openModalPost}>Post something</Button>
-          </div>
+          {auth_uid === userByKey.uid ? (
+            <div className="postButton">
+              <Button onClick={openModalPost}>Post something</Button>
+            </div>
+          ) : (
+            <></>
+          )}
           <div className="allPosts">
             {userByKey.posts.length > 0 ? (
-              userByKey.posts.map((item, index) => (
+              userByKey.posts.map((item) => (
                 <div
                   key={item.key}
                   onClick={() => openPostDetail(item.key)}
@@ -111,7 +135,7 @@ const ProfilePage = (props) => {
           </div>
         </div>
       ) : (
-        <div className='loadingWrap'>
+        <div className="loadingWrap">
           <Loading />
         </div>
       )}

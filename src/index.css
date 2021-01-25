@@ -33,3 +33,6 @@ button{
     --online-color :#2a8f4c;
     --offline-color:#232346;
   }
+a{
+    text-decoration: none;
+}

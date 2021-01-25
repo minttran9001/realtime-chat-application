@@ -1,0 +1,16 @@
+.commentInput {
+    padding-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .input {
+        width: 90%;
+
+        input {
+            width: 100%;
+            border: none;
+            outline: none;
+        }
+    }
+}

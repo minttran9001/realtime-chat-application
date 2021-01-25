@@ -5,6 +5,7 @@ import SignUp from "./containers/SignUpPage/index";
 import Login from "./containers/LoginPage/index";
 import Home from "./containers/HomePage/index";
 import Profile from "./containers/ProfilePage/index";
+import NewFeed from './containers/NewFeedPage/index'
 import PrivateRoute from "./components/Private/index.js";
 import { useDispatch, useSelector } from "react-redux";
 import { isLoggedInUser } from "./actions";
@@ -21,6 +22,7 @@ function App() {
     { path: "/realtime-chat-application", name: "Home", component: Home },
     { path: "/login", name: "Login", component: Login },
     { path: "/signup", name: "Sign Up", component: SignUp },
+    { path: "/newfeed", name: "New Feed", component: NewFeed },
     { path: "/profile/:uid", name: "Profile", component: Profile },
   ];
 

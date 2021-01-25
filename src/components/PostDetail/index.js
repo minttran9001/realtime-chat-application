@@ -12,24 +12,29 @@ import { BsChat } from "react-icons/bs";
 import Button from "../Layout/UI/Button";
 import { useDispatch, useSelector } from "react-redux";
 import Loading from "../Layout/UI/Loading";
-import { pushPost, pushPostComment } from "../../actions/post";
+import { pushPostComment } from "../../actions/post";
 import { getRealtimeInteractions, updateLike } from "../../actions";
-const PostDetail = () => {
-  var { item, loading, comments } = useSelector(
-    (state) => state.post.postbykey
-  );
-  const auth = useSelector((state) => state.auth);
-  const { interactions } = useSelector((state) => state.interaction);
+const PostDetail = ({auth}) => {
   const dispatch = useDispatch();
-
   const [replySelected, setReplySelected] = React.useState([]);
   const [commentValue, setCommentValue] = React.useState("");
-
+  const { post, interaction } = useSelector((state) => state);
+  const auth_uid = React.useMemo(()=>{
+    return auth
+  },[auth])
+  const interactionArr = React.useMemo(() => {
+    return interaction.interactions;
+  }, [interaction.interactions]);
+  const { item, loading, comments } = React.useMemo(() => {
+    return {
+      item: post.postByKey.item,
+      loading: post.postByKey.loading,
+      comments: post.postByKey.comments,
+    };
+  }, [post.postByKey.item, post.postByKey.comments]);
   React.useEffect(() => {
-    if (item !== {}) {
-      dispatch(getRealtimeInteractions(item.key));
-    }
-  }, [item]);
+    dispatch(getRealtimeInteractions(item.key));
+  }, [item.key,dispatch]);
   const closePostDetail = () => {
     const postDetail = document.querySelector(".postDetail");
     postDetail.classList.remove("open");
@@ -45,7 +50,7 @@ const PostDetail = () => {
     const comment = {
       content: commentValue,
       pid: item.key,
-      uid: auth.uid,
+      uid: auth_uid,
     };
     dispatch(pushPostComment(comment));
     setCommentValue("");
@@ -57,6 +62,7 @@ const PostDetail = () => {
     newArr[index] = true;
     setReplySelected(newArr);
   };
+
   const closeReplyComment = (index) => {
     const newArr = [...replySelected];
     document.querySelectorAll(".replies")[index].classList.remove("view");
@@ -66,11 +72,28 @@ const PostDetail = () => {
   const handleLikePost = () => {
     const obj = {
       pid: item.key,
-      uid: auth.uid,
+      uid: auth_uid,
     };
-    console.log("liked");
     dispatch(updateLike(obj));
   };
+  const isInArray = (arr)=> {
+    console.log(interactionArr)
+      if(arr.length>0)
+      {
+        for (let i =0;i<arr.length;i++) {
+          console.log(arr[i].uid)
+          if(arr[i].uid===auth_uid)
+          {
+            return true;
+          }
+        }
+        return false
+      }
+      else{
+        return false
+      }
+    
+  }
   return (
     <div className="postDetail">
       <AiOutlineClose className="exit" onClick={closePostDetail} />
@@ -84,8 +107,10 @@ const PostDetail = () => {
           <div className="postStatus">
             <div className="postOwner">
               <div className="ownerAvatar">
-                <img src={Mint} alt={item.key} />
-                <p>mint_stillwalks</p>
+                <div>
+                  <img src={item.owner.avatarUrl} alt={item.key} />
+                </div>
+                <p>{item.owner.firstName + " " + item.owner.lastName}</p>
               </div>
               <div className="more">
                 <div className="circle"></div>
@@ -95,8 +120,12 @@ const PostDetail = () => {
             </div>
             <div className="postDescription">
               <div className="ownerAvatar">
-                <img src={Mint} alt={Mint} />
-                <p className="name">mint_stillwalks</p>
+                <div>
+                  <img src={item.owner.avatarUrl} alt={item.key} />
+                </div>
+                <p className="name">
+                  {item.owner.firstName + " " + item.owner.lastName}
+                </p>
                 <p className="status">{item.status}</p>
               </div>
               <div className="postedDate">
@@ -106,13 +135,18 @@ const PostDetail = () => {
                 {comments.map((item, index) => (
                   <div key={index} className="comment">
                     <div className="ownerImage">
-                      <img src={Mint} alt={Mint} />
+                      <div className='wrap'>
+                      <img
+                        src={item.sender.avatarUrl}
+                        alt={item.sender.firstName}
+                      />
+                      </div>
                     </div>
                     <div className="ownerDetail">
                       <div className="ownerName">
                         <div className="content">
                           {" "}
-                          <p>mint_stillwalks</p>
+                          <p>{item.sender.firstName}</p>
                           <p>{item.content}</p>
                         </div>
                       </div>
@@ -166,7 +200,7 @@ const PostDetail = () => {
               <div className="postLiked">
                 <div className="iconBox">
                   <div className="likeIcon">
-                    {interactions.find((int) => int.uid = auth.uid) ? (
+                    {isInArray(interactionArr) ? (
                       <AiFillHeart onClick={handleLikePost} className="icon" />
                     ) : (
                       <AiOutlineHeart
@@ -183,7 +217,7 @@ const PostDetail = () => {
                   </div>
                 </div>
                 <div className="likedBy">
-                  <p>Liked by {interactions.length} peoples</p>
+                  <p>Liked by {interactionArr.length} peoples</p>
                   <p>{item.createdAt.toDate().toDateString()}</p>
                 </div>
               </div>

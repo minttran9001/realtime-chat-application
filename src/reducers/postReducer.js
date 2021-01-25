@@ -6,9 +6,9 @@ const initialState = {
   loadingPosts: true,
   error: null,
   posted: false,
-  postbykey: {
+  postByKey: {
     item: {},
-    comments : [],
+    comments: [],
     loading: true,
     error: null,
   },
@@ -61,10 +61,10 @@ export default (state = initialState, action) => {
     case `${postConstants.GET_POST_BY_KEY}_SUCCESS`:
       state = {
         ...state,
-        postbykey: {
-          ...state.postbykey,
+        postByKey: {
+          ...state.postByKey,
           item: action.payload.postItem,
-          comments : action.payload.comments,
+          comments: action.payload.comments,
           loading: false,
           error: null,
         },
@@ -73,13 +73,35 @@ export default (state = initialState, action) => {
     case `${postConstants.GET_POST_BY_KEY}_FAILURE`:
       state = {
         ...state,
-        postbykey: {
-          ...state.postbykey,
+        postByKey: {
+          ...state.postByKey,
           loading: true,
           error: action.payload.error,
         },
       };
       return state;
+    case `${postConstants.GET_REALTIME_POSTS_NEW_FEED}_REQUEST`:
+      state = {
+        ...state,
+        loadingPosts: true,
+      };
+      return state;
+    case `${postConstants.GET_REALTIME_POSTS_NEW_FEED}_SUCCESS`:
+      debugger
+      state = {
+        ...state,
+        loadingPosts: false,
+        posts:action.payload.posts,
+        error:'',
+        
+      };
+      return state;
+    case `${postConstants.GET_REALTIME_POSTS_NEW_FEED}_FAILURE`:
+      state = {
+        ...state,
+        loadingPosts : false,
+        error: action.payload.error,
+      }
     default:
       return state;
   }

@@ -98,7 +98,7 @@ export const getUserById = ({ uid }) => {
     const db = firebase.firestore();
     const userRef = db.collection("users");
     const postRef = db.collection("posts");
-
+    
     postRef.where("uid", "==", uid).onSnapshot(async (snapshot) => {
       const posts = [];
       snapshot.forEach((doc) => {

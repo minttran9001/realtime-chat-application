@@ -172,7 +172,7 @@ const Home = () => {
       const clicked = e.target.className;
       if (clicked !== myTarget) {
         myTarget.classList.remove("open");
-        setMenuSelected(-1)
+        setMenuSelected(-1);
       }
     }
   };
@@ -238,7 +238,9 @@ const Home = () => {
                     <div className="menuGroup">
                       <div className="menuItem">
                         <AiOutlineUser className="icon" />
-                        <NavLink to={`/profile/${item.key}`}>Go to profile page</NavLink>
+                        <NavLink to={`/profile/${item.key}`}>
+                          Go to profile page
+                        </NavLink>
                       </div>
                       <div className="menuItem">
                         <AiOutlineBell className="icon" />
@@ -260,7 +262,7 @@ const Home = () => {
               ))}
             </div>
           ) : (
-            <div className="friendList loading">
+            <div className=" loading">
               <BiLoaderCircle className="icon" />
             </div>
           )}
@@ -277,7 +279,9 @@ const Home = () => {
                       : noavt
                   }
                 />
-                <p>{userSelected.firstName}</p>
+                <NavLink to={`/profile/${userSelected.key}`}>
+                  <p>{userSelected.firstName}</p>
+                </NavLink>
               </div>
               <div className="headCall">
                 <AiOutlinePhone className="icon" />
@@ -300,7 +304,7 @@ const Home = () => {
                     >
                       {auth.uid !== item.user_uid_1 ? (
                         <img
-                        alt={index}
+                          alt={index}
                           className="avatar"
                           src={
                             userSelected.avatarUrl !== null
