@@ -9,7 +9,11 @@ export default function PrivateRoute({ component: Component, ...rest }) {
           ? JSON.parse(localStorage.getItem("user"))
           : null;
         if (user) {
-          return <Component {...props} />;
+          if (user.auth) {
+            return <Component {...props} />;
+          } else {
+            return <Redirect to="/login" />;
+          }
         } else {
           return <Redirect to="/login" />;
         }

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   getRealTimePostsNewFeed,
   pushPostComment,
+  setOffLine,
   updateLike,
 } from "../../actions";
 import moment from "moment";
@@ -45,6 +46,7 @@ const NewFeedPage = () => {
       return false;
     }
   };
+ 
   const handlePushComment = (e,pid) => {
     e.preventDefault();
   
