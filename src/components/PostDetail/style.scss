@@ -335,3 +335,39 @@
 
     }
 }
+@media screen and (max-width:960px)
+{
+    .postDetail {
+    
+
+        .postWrapper {
+            flex-direction: column;
+            .postImage{
+                height: 400px;
+                img{
+                    width: 70%;
+                }
+            }
+            .postStatus {
+             width: 100%;
+                .postOwner {
+                   display: none;
+                    
+    
+    
+                }
+                .commentBox{
+                    display: none;
+                }
+                .postDescription {
+                    width: 100%;
+    
+                    
+                    
+    
+                }
+            }
+    
+        }
+    }
+}

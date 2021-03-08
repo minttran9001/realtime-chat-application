@@ -75,6 +75,7 @@
                align-items: center;
                overflow: hidden;
                border-radius: 50%;
+               background-color: var(--lightblue-color);
 
                 img{
                     width: 100%;
@@ -98,5 +99,13 @@
         right: 15px;
         background-color: transparent;
         font-size: 25px;
+    }
+}
+@media screen and (max-width:960px)
+{
+    .modalUpdateAvatar{
+        .modalWrapper{
+            width: 100%;
+        }
     }
 }

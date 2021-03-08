@@ -201,7 +201,8 @@ const Home = () => {
   };
   return (
     <Layout>
-      <div id="homePage" className="homePage">
+     <div className="homepage-wrap">
+     <div id="homePage" className="homePage">
         <div className="friendListWrap is-active">
           {!loadingUser ? (
             <div className="friendList">
@@ -415,6 +416,7 @@ const Home = () => {
           </div>
         )}
       </div>
+     </div>
     </Layout>
   );
 };

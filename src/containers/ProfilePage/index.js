@@ -67,7 +67,8 @@ const closeSeePost = ()=>{
       <ModalUpdateAvatar />
       <PostDetail auth={auth_uid} />
       {!user.loadingUserByKey ? (
-        <div className="profile">
+        <div className="profile-wrap">
+          <div className="profile">
           <div className="profileHead">
             <div className="avatar">
               <div className="avatarWrap">
@@ -153,6 +154,7 @@ const closeSeePost = ()=>{
               </div>
             </div>
           </div>
+        </div>
         </div>
       ) : (
         <div className="loadingWrap">
