@@ -12,9 +12,6 @@ import { isLoggedInUser, setOffLine } from "./actions";
 function App() {
   const dispatch = useDispatch();
   const auth = useSelector((state) => state.auth);
-  const auth_uid = useMemo(() => {
-    return auth.uid;
-  }, [auth.uid]);
   React.useEffect(() => {
     if (!auth.authenticated) {
       dispatch(isLoggedInUser());

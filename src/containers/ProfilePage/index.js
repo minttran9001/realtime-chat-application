@@ -5,6 +5,9 @@ import {
   AiOutlineSetting,
   AiOutlinePlusCircle,
   AiOutlineHeart,
+  AiOutlineArrowLeft,
+  AiOutlineArrowRight
+
 } from "react-icons/ai";
 import { BsChat } from "react-icons/bs";
 import "./style.scss";
@@ -40,10 +43,9 @@ const ProfilePage = (props) => {
   }, [uidParam]);
 
   const openPostDetail = (key) => {
-    
     const postDetail = document.querySelector(".postDetail");
     postDetail.classList.add("open");
-    dispatch(getPostByKey(key,userByKey.uid));
+    dispatch(getPostByKey(key, userByKey.uid));
   };
 
   const openModalPost = () => {
@@ -53,12 +55,17 @@ const ProfilePage = (props) => {
   const openModalUpdateAvatar = () => {
     document.querySelector(".modalUpdateAvatar").classList.add("open");
   };
-
+const openSeePost = ()=>{
+  document.querySelector('.profile').classList.add('is-active')
+}
+const closeSeePost = ()=>{
+  document.querySelector('.profile').classList.remove('is-active')
+}
   return (
     <Layout>
       <ModalPost />
       <ModalUpdateAvatar />
-      <PostDetail auth = {auth_uid} />
+      <PostDetail auth={auth_uid} />
       {!user.loadingUserByKey ? (
         <div className="profile">
           <div className="profileHead">
@@ -97,41 +104,54 @@ const ProfilePage = (props) => {
               <div className="madeUpName">
                 <p>小さなホタル</p>
               </div>
+              <div onClick={openSeePost}  className="see-post">
+                <Button>See post
+                  <AiOutlineArrowRight className='icon'/>
+                </Button>
+              </div>
             </div>
           </div>
-          {auth_uid === userByKey.uid ? (
-            <div className="postButton">
-              <Button onClick={openModalPost}>Post something</Button>
-            </div>
-          ) : (
-            <></>
-          )}
-          <div className="allPosts">
-            {userByKey.posts.length > 0 ? (
-              userByKey.posts.map((item) => (
-                <div
-                  key={item.key}
-                  onClick={() => openPostDetail(item.key)}
-                  className="post"
-                >
-                  <div className="postImage">
-                    <img alt={item.createdAt} src={item.file} />
-                  </div>
-                  <div className="postHover">
-                    <p>
-                      <AiOutlineHeart className="icon" /> {item.likeCount}
-                    </p>
-                    <p>
-                      <BsChat className="icon" /> {item.commentCount}
-                    </p>
-                  </div>
+          <div className="post-container-wrap">
+            <div className="post-container">
+              {auth_uid === userByKey.uid ? (
+                <div className="postButton">
+                  <AiOutlineArrowLeft
+                  onClick={closeSeePost}
+                className="icon closePostList"
+              />
+                  <Button onClick={openModalPost}>Post something</Button>
                 </div>
-              ))
-            ) : (
-              <div className="post">
-                <p>Havent posted anything</p>
+              ) : (
+                <></>
+              )}
+              <div className="allPosts">
+                {userByKey.posts.length > 0 ? (
+                  userByKey.posts.map((item) => (
+                    <div
+                      key={item.key}
+                      onClick={() => openPostDetail(item.key)}
+                      className="post"
+                    >
+                      <div className="postImage">
+                        <img alt={item.createdAt} src={item.file} />
+                      </div>
+                      <div className="postHover">
+                        <p>
+                          <AiOutlineHeart className="icon" /> {item.likeCount}
+                        </p>
+                        <p>
+                          <BsChat className="icon" /> {item.commentCount}
+                        </p>
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div className="post">
+                    <p>Havent posted anything</p>
+                  </div>
+                )}
               </div>
-            )}
+            </div>
           </div>
         </div>
       ) : (

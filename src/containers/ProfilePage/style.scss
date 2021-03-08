@@ -1,14 +1,14 @@
 .profile{
     width: 100%;
-    margin: auto;
     .profileHead{
         display: flex;
         align-items: center;
         width: 50%;
         margin: auto;
-        justify-content: space-evenly;
+        justify-content: center;
         .avatar{
             position: relative;
+            margin-right: 20px;
             height: 100%;
             justify-content: center;
             display: flex;
@@ -145,10 +145,11 @@
                 width: 170px;
                 overflow: hidden;
                 height: 200px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
                 img{
-                    height: 100%;
                     width: 100%;
-                    
                 }
             }
             .postHover{
@@ -186,10 +187,120 @@
     }
    
 }
+.closePostList{
+    display: none;
+}
 .loadingWrap{
     width: 100vw;
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+.see-post{
+    width: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    button{
+        margin: 0px 20px;
+        display: flex;
+        align-items: center;
+        border-radius: 15px;
+        
+        border: 1px solid var(--gold-color);
+        .icon{
+            margin-left: 20px;
+        }
+    }
+}
+@media screen and (max-width:960px)
+{
+
+    .see-post{
+        display: flex;
+    }
+    .profile{
+        transition: all .5s;
+        
+        display: flex;
+        justify-content: space-between;
+        &.is-active{
+            transform: translateX(-100%);
+        }
+        .profileHead{
+            min-width: 100%;
+            flex-direction: column;
+            margin: 0 auto;
+        }   
+        .post-container-wrap{
+            display: flex;
+            height: 100vh;
+            min-width: 100vw;
+
+            justify-content: center;
+        }
+        .post-container{
+            height: 100vh;
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+                width: 12px;
+            }
+    
+            /* Track */
+            &::-webkit-scrollbar-track {
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+            }
+    
+            /* Handle */
+            &::-webkit-scrollbar-thumb {
+                -webkit-border-radius: 10px;
+                border-radius: 10px;
+                background: var(--lightblue-color);
+                -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+            }
+    
+            &::-webkit-scrollbar-thumb:window-inactive {
+                background: rgba(255, 0, 0, 0.4);
+            }
+        }
+        .allPosts{
+            width: 80%;
+            overflow-x: visible;
+            justify-content: center;
+            display: grid;
+            gap: 20px 20px;
+            grid-template-columns: repeat(3,1fr);
+            
+            .post{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin: 0;
+            }
+            .post:last-child{
+                margin-bottom: 100px;
+            }
+        }
+    }
+    .closePostList{
+
+        display: block;
+        cursor: pointer;
+        font-size: 20px;
+        margin-right: 20px;
+    }
+}
+
+@media screen and (max-width :720px)
+{
+    .profile{
+        width: 100%;
+        .allPosts{
+            grid-template-columns: repeat(2,1fr);
+        }
+    }
+    
 }

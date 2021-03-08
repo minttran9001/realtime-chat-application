@@ -4,6 +4,7 @@ import { Link, NavLink } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { isLoggedInUser, logout } from "../../actions";
 import Logo from "../../images/100ppi/Asset 2.png";
+import {AiOutlineBars,AiOutlineClose} from 'react-icons/ai'
 export default function Header() {
   const auth = useSelector((state) => state.auth);
   const dispatch = useDispatch();
@@ -11,13 +12,22 @@ export default function Header() {
   const handleLogout = () => {
     dispatch(logout(auth.uid));
   };
+  const closeMenu = ()=>{
+    document.querySelector('.navSide').classList.remove('is-active')
+  }
+  const openMenu = ()=>{
+    document.querySelector('.navSide').classList.add('is-active')
+
+  }
   return (
     <div className="header">
       <div className="navBar">
         <NavLink to='/realtime-chat-application' className="logoArea">
           <img src={Logo} alt="logo" />
         </NavLink>
+        <AiOutlineBars onClick={openMenu} className='hamburger-menu'/>
         <div className="navSide">
+          <AiOutlineClose onClick={closeMenu} className='icon close-hamburger-menu'/>
           {!auth.authenticated ? (
             <ul className="navWrap">
               <li className="navItem">

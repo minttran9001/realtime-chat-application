@@ -3,7 +3,7 @@ import Layout from "../../components/Layout";
 import "./style.scss";
 import testImg from "../../images/mint.jpg";
 import { AiOutlineSend, AiOutlineHeart, AiFillHeart } from "react-icons/ai";
-import noavt from "../../images/noavtar.png";
+import noavt from '../../images/noavtar.png';
 import { BsChat } from "react-icons/bs";
 import { VscBookmark } from "react-icons/vsc";
 import { useDispatch, useSelector } from "react-redux";
@@ -95,11 +95,9 @@ const NewFeedPage = () => {
                     <div className="ownerImage">
                       <img
                         src={
-                          item.owner.avatarUrl !== null
-                            ? item.owner.avatarUrl
-                            : noavt
+                          item.owner.avatarUrl != null ? item.owner.avatarUrl : noavt
                         }
-                        alt="owner"
+                        alt="avatar owner"
                       />
                     </div>
                     <div className="ownerName">

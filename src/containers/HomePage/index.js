@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import Layout from "../../components/Layout/index";
-import Mint from "../../images/mint.jpg";
 import Button from "../../components/Layout/UI/Button/index";
 import "./style.scss";
 import {
@@ -12,7 +11,7 @@ import {
   AiOutlineInfoCircle,
   AiOutlineSend,
   AiOutlineCheckCircle,
-  AiFillCheckCircle,
+  AiOutlineArrowLeft,
   AiOutlineUser,
   AiOutlineDelete,
   AiOutlineBell,
@@ -24,7 +23,6 @@ import { BsCameraVideo } from "react-icons/bs";
 import { MdTagFaces } from "react-icons/md";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  getLoadMoreConversations,
   getRealTimeConversations,
   getRealTimeUser,
   setSeenMessage,
@@ -54,6 +52,15 @@ const Home = () => {
   };
   useEffect(() => {
     viewUser();
+    const container = document.getElementById("homePage")
+    window.addEventListener("resize", () => {
+      if(container !==null)
+      {
+        if (window.innerWidth > 1200) {
+          container.style.transform = "translateX(0%)";
+        }
+      }
+    });
   }, []);
   const selectItem = (index) => {
     if (isSelected !== "") {
@@ -72,6 +79,9 @@ const Home = () => {
     const users = { uid_1: auth.uid, uid_2: user.uid };
     setUserSelected(user);
     dispatch(getRealTimeConversations(users));
+    if (window.innerWidth <= 1200) {
+      document.getElementById("homePage").style.transform = "translateX(-100%)";
+    }
   };
   useEffect(() => {
     if (userSelected != "") {
@@ -85,7 +95,7 @@ const Home = () => {
     }
   }, [userSelected]);
   useEffect(() => {
-    if (userSelected != "" && !loadingChat) {
+    if (userSelected !== "" && !loadingChat) {
       let chatArea = document.getElementById("chatArea");
       chatArea.scrollTop = chatArea.scrollHeight;
     }
@@ -186,10 +196,13 @@ const Home = () => {
         [menuSelected].classList.remove("open");
     }
   };
+  const toggleListFriend = () => {
+    document.getElementById("homePage").style.transform = "translateX(0)";
+  };
   return (
     <Layout>
-      <div className="homePage">
-        <div className="friendListWrap">
+      <div id="homePage" className="homePage">
+        <div className="friendListWrap is-active">
           {!loadingUser ? (
             <div className="friendList">
               {users.map((item, index) => (
@@ -270,6 +283,10 @@ const Home = () => {
         {userSelected !== "" ? (
           <div className="chatBox">
             <div className="headBox">
+              <AiOutlineArrowLeft
+                onClick={toggleListFriend}
+                className="icon closeChatbox"
+              />
               <div className="headUser">
                 <img
                   alt="avatar"
@@ -304,10 +321,10 @@ const Home = () => {
                     >
                       {auth.uid !== item.user_uid_1 ? (
                         <img
-                          alt={index}
+                          alt={userSelected.avatarUrl}
                           className="avatar"
                           src={
-                            userSelected.avatarUrl !== null
+                            userSelected.avatarUrl != null
                               ? userSelected.avatarUrl
                               : noavt
                           }

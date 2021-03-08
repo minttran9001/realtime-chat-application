@@ -11,6 +11,7 @@ import { VscBookmark } from "react-icons/vsc";
 import { BsChat } from "react-icons/bs";
 import Button from "../Layout/UI/Button";
 import { useDispatch, useSelector } from "react-redux";
+import noavt from '../../images/noavtar.png'
 import Loading from "../Layout/UI/Loading";
 import { pushPostComment } from "../../actions/post";
 import { getRealtimeInteractions, updateLike } from "../../actions";
@@ -108,7 +109,7 @@ const PostDetail = ({auth}) => {
             <div className="postOwner">
               <div className="ownerAvatar">
                 <div>
-                  <img src={item.owner.avatarUrl} alt={item.key} />
+                  <img src={item.owner.avatarUrl != null ? item.owner.avatarUrl : noavt} alt={item.key} />
                 </div>
                 <p>{item.owner.firstName + " " + item.owner.lastName}</p>
               </div>
@@ -121,7 +122,7 @@ const PostDetail = ({auth}) => {
             <div className="postDescription">
               <div className="ownerAvatar">
                 <div>
-                  <img src={item.owner.avatarUrl} alt={item.key} />
+                  <img src={item.owner.avatarUrl != null ? item.owner.avatarUrl : noavt} alt={item.key} />
                 </div>
                 <p className="name">
                   {item.owner.firstName + " " + item.owner.lastName}
@@ -137,7 +138,7 @@ const PostDetail = ({auth}) => {
                     <div className="ownerImage">
                       <div className='wrap'>
                       <img
-                        src={item.sender.avatarUrl}
+                        src={item.sender.avatarUrl != null ? item.sender.avatarUrl : noavt}
                         alt={item.sender.firstName}
                       />
                       </div>

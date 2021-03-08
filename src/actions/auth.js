@@ -47,7 +47,7 @@ export const signUp = (user) => {
                   },
                   API_KEY,
                   {
-                    expiresIn: 150,
+                    expiresIn: 3000,
                   }
                 );
 
@@ -121,7 +121,7 @@ export const signIn = (user) => {
                             },
                             API_KEY,
                             {
-                              expiresIn: 150,
+                              expiresIn: 3000,
                             }
                           );
                           const loggedUser = {
@@ -167,6 +167,7 @@ export const signIn = (user) => {
 
 export const isLoggedInUser = () => {
   return async (dispatch) => {
+    debugger
     const user = localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
       : null;
@@ -181,14 +182,6 @@ export const isLoggedInUser = () => {
       } else {
         jwt.verify(token, API_KEY, (err, decode) => {
           if (err) {
-            firebase
-              .firestore()
-              .collection("users")
-              .doc(decode.uid)
-              .update({
-                isOnline: false,
-              })
-              .then(() => {
                 localStorage.clear();
                 dispatch({
                   type: `${authConstants.USER_LOGIN}_FAILURE`,
@@ -196,7 +189,6 @@ export const isLoggedInUser = () => {
                     error: "You have no permission. Please log in again",
                   },
                 });
-              });
           } else {
             firebase
               .firestore()
@@ -224,17 +216,7 @@ export const isLoggedInUser = () => {
     }
   };
 };
-export const setOffLine = (uid) => {
-  return async (dispatch) => {
-    debugger;
-    if (uid !== "") {
-      const db = firebase.firestore();
-      db.collection("users").doc(uid).update({
-        isOnline: false,
-      });
-    }
-  };
-};
+
 export const logout = (uid) => {
   return async (dispatch) => {
     dispatch({ type: `${authConstants.USER_LOGOUT}_REQUEST` });
