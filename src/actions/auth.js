@@ -56,7 +56,18 @@ export const signUp = (user) => {
                   token: token,
                 };
                 localStorage.setItem("user", JSON.stringify(loggedUser));
-                isLoggedInUser();
+                dispatch({
+                  type: `${authConstants.USER_LOGIN}_SUCCESS`,
+                  payload: {
+                    user: {
+                      avatarUrl : user.avatarUrl,
+                      firstName: user.firstName,
+                      lastName: user.lastName,
+                      uid: data.user.uid,
+                      email: user.email,
+                    },
+                  },
+                });
               })
               .catch((err) => {
                 dispatch({
@@ -167,7 +178,6 @@ export const signIn = (user) => {
 
 export const isLoggedInUser = () => {
   return async (dispatch) => {
-    debugger
     const user = localStorage.getItem("user")
       ? JSON.parse(localStorage.getItem("user"))
       : null;
